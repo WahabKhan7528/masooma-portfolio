@@ -73,7 +73,7 @@ const About = () => {
                 <TextWrapper>A</TextWrapper>{' '}
                 <TextWrapper className="font-serif italic lowercase tracking-[1px] text-accent-violet font-normal">UX/UI</TextWrapper>{' '}
                 <TextWrapper>and</TextWrapper>{' '}
-                <TextWrapper className="font-serif italic lowercase tracking-[1px] text-accent-violet font-normal">brand</TextWrapper>{' '}
+                <TextWrapper className="font-serif italic lowercase tracking-[1px] text-accent-violet font-normal">web</TextWrapper>{' '}
                 <TextWrapper className="font-serif italic lowercase tracking-[1px] text-accent-violet font-normal">designer</TextWrapper>{' '}
                 <br className="hidden md:block" />
                 <TextWrapper>I'm</TextWrapper>{' '}
@@ -91,98 +91,56 @@ const About = () => {
                 <TextWrapper className="font-serif italic lowercase tracking-[1px] text-accent-violet font-normal">curiosity.</TextWrapper>{' '}
             </div>
 
-            {/* Relocated Services Stack (Commented out as requested) */}
-            {/*
-            <div
-                ref={stackRef}
-                onMouseEnter={() => setIsHoveringStack(true)}
-                onMouseLeave={handleMouseLeave}
-                className="relative w-full max-w-[280px] sm:max-w-[300px] xl:max-w-[320px] z-20 perspective-[1000px] mx-auto"
-            >
-                <div className="relative w-full h-[300px] sm:h-[320px] xl:h-[350px] cursor-pointer">
-
-                    <div
-                        className={`absolute top-0 left-0 w-full backdrop-blur-2xl bg-[#F8F6F4]/95 border border-primary-text/10 p-6 sm:p-8 rounded-[20px] sm:rounded-[24px] shadow-lg transition-all duration-[800ms] ease-custom origin-bottom
-                            ${activeCard === 2 ? 'translate-y-0 scale-100 rotate-0 opacity-100 z-30 shadow-[0_20px_40px_rgba(0,0,0,0.06)]' :
-                                isHoveringStack ? (activeCard < 2 ? 'translate-y-4 scale-95 opacity-50 z-10' : '-translate-y-8 scale-105 opacity-0 z-40') :
-                                    'translate-y-0 scale-100 opacity-0 z-10'}
-                        `}
-                    >
-                        <p className="text-[9px] sm:text-[10px] font-bold tracking-[3px] sm:tracking-[4px] uppercase mb-3 sm:mb-4 text-accent-violet border-b border-primary-text/10 pb-3 flex justify-between items-center">
-                            <span>Toolkit</span>
-                            <span className="text-primary-text/30 font-display text-base sm:text-lg">03</span>
-                        </p>
-                        <ul className="flex flex-col gap-2 sm:gap-3 font-body text-[12px] sm:text-[13px] font-medium tracking-[0.5px]">
-                            <li>Figma & FigJam</li>
-                            <li>Framer & Webflow</li>
-                            <li>React & Tailwind CSS</li>
-                            <li>Adobe Creative Suite</li>
-                        </ul>
+            {/* Stats Row */}
+            <div className="w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-4 border-t border-primary-text/10 pt-12 sm:pt-16 mb-16 sm:mb-24">
+                {[
+                    { number: '1+', label: 'Years of Experience' },
+                    { number: '10+', label: 'Projects Completed' },
+                    { number: '10+', label: 'Happy Clients' },
+                    { number: '3+', label: 'Design Tools Mastered' },
+                ].map((stat) => (
+                    <div key={stat.label} className="flex flex-col items-center text-center gap-2">
+                        <span className="font-display text-[clamp(36px,6vw,72px)] font-bold text-accent-violet leading-none">
+                            {stat.number}
+                        </span>
+                        <span className="font-body text-[10px] sm:text-xs uppercase tracking-[2px] text-primary-text/50 font-semibold">
+                            {stat.label}
+                        </span>
                     </div>
-
-                    <div
-                        className={`absolute top-0 left-0 w-full backdrop-blur-2xl bg-[#F8F6F4]/95 border border-primary-text/10 p-6 sm:p-8 rounded-[20px] sm:rounded-[24px] shadow-xl transition-all duration-[800ms] ease-custom origin-bottom
-                            ${activeCard === 1 ? 'translate-y-0 scale-100 rotate-0 opacity-100 z-30 shadow-[0_20px_40px_rgba(0,0,0,0.06)]' :
-                                isHoveringStack ? (activeCard < 1 ? 'translate-y-2 scale-95 opacity-80 z-20' : '-translate-y-8 scale-105 opacity-0 z-40') :
-                                    'translate-y-0 scale-100 opacity-0 z-20'}
-                        `}
-                    >
-                        <p className="text-[9px] sm:text-[10px] font-bold tracking-[3px] sm:tracking-[4px] uppercase mb-3 sm:mb-4 text-accent-violet border-b border-primary-text/10 pb-3 flex justify-between items-center">
-                            <span>Capabilities</span>
-                            <span className="text-primary-text/30 font-display text-base sm:text-lg">02</span>
-                        </p>
-                        <ul className="flex flex-col gap-2 sm:gap-3 font-body text-[12px] sm:text-[13px] font-medium tracking-[0.5px]">
-                            <li>Product Design</li>
-                            <li>Design Systems</li>
-                            <li>Wireframing & Prototyping</li>
-                            <li>Visual & Interaction Design</li>
-                        </ul>
-                    </div>
-
-                    <div
-                        className={`absolute top-0 left-0 w-full backdrop-blur-2xl bg-[#F8F6F4]/90 border border-primary-text/5 p-6 sm:p-8 rounded-[20px] sm:rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.06)] transition-all duration-[800ms] ease-custom origin-bottom
-                            ${activeCard === 0 ? 'translate-y-0 scale-100 rotate-0 opacity-100 z-30 shadow-[0_20px_40px_rgba(0,0,0,0.06)]' :
-                                '-translate-y-8 scale-105 opacity-0 z-40'}
-                        `}
-                    >
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-violet/20 via-primary-text/20 to-accent-violet/20"></div>
-
-                        <p className="text-[9px] sm:text-[10px] font-bold tracking-[3px] sm:tracking-[4px] uppercase mb-4 sm:mb-6 text-accent-violet border-b border-primary-text/10 pb-3 flex justify-between items-center">
-                            <span>Core Focus</span>
-                            <span className="text-primary-text/30 font-display text-base sm:text-lg">01</span>
-                        </p>
-
-                        <ul className="flex flex-col gap-3 sm:gap-4 font-body text-[12px] sm:text-[13px] md:text-[14px] font-medium tracking-[0.5px]">
-                            <li className="flex items-start gap-3 sm:gap-4">
-                                <span className="mt-[6px] w-1.5 h-1.5 rounded-full bg-accent-violet"></span>
-                                <span className="flex-1 text-primary-text">User Experience & Interface</span>
-                            </li>
-                            <li className="flex items-start gap-3 sm:gap-4">
-                                <span className="mt-[6px] w-1.5 h-1.5 rounded-full bg-accent-violet"></span>
-                                <span className="flex-1 text-primary-text">Brand Strategy & Identity</span>
-                            </li>
-                            <li className="flex items-start gap-3 sm:gap-4">
-                                <span className="mt-[6px] w-1.5 h-1.5 rounded-full bg-accent-violet"></span>
-                                <span className="flex-1 text-primary-text">Scalable Design Systems</span>
-                            </li>
-                        </ul>
-
-                        <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-primary-text/5 text-center">
-                            <span className="text-[8px] sm:text-[9px] font-bold tracking-[2px] uppercase text-primary-text/40 transition-colors">
-                                {isHoveringStack ? "Scroll to navigate" : "Hover to expand"}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className={`absolute -right-5 sm:-right-6 top-1/2 -translate-y-1/2 flex flex-col gap-1.5 sm:gap-2 transition-opacity duration-300 ${isHoveringStack ? 'opacity-100' : 'opacity-0'}`}>
-                        <div className={`w-1 sm:w-1.5 rounded-full transition-all duration-300 ${activeCard === 0 ? 'h-3 sm:h-4 bg-accent-violet' : 'h-1 sm:h-1.5 bg-primary-text/20'}`}></div>
-                        <div className={`w-1 sm:w-1.5 rounded-full transition-all duration-300 ${activeCard === 1 ? 'h-3 sm:h-4 bg-accent-violet' : 'h-1 sm:h-1.5 bg-primary-text/20'}`}></div>
-                        <div className={`w-1 sm:w-1.5 rounded-full transition-all duration-300 ${activeCard === 2 ? 'h-3 sm:h-4 bg-accent-violet' : 'h-1 sm:h-1.5 bg-primary-text/20'}`}></div>
-                    </div>
-
-                </div>
+                ))}
             </div>
-            */}
+
+            {/* Skills & Tools Grid */}
+            <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-px bg-primary-text/10 border border-primary-text/10 rounded-2xl overflow-hidden">
+                {[
+                    {
+                        title: 'Core Focus',
+                        items: ['UX Research', 'Interface Design', 'Brand Identity', 'Design Systems'],
+                    },
+                    {
+                        title: 'Capabilities',
+                        items: ['Wireframing', 'Prototyping', 'Visual Design', 'Interaction Design'],
+                    },
+                    {
+                        title: 'Toolkit',
+                        items: ['Figma & FigJam', 'Framer', 'Adobe Suite', 'React & Tailwind'],
+                    },
+                ].map((col, i) => (
+                    <div key={col.title} className="bg-dark-bg p-6 sm:p-8 flex flex-col gap-4">
+                        <p className="font-body text-[10px] font-bold tracking-[3px] uppercase text-accent-violet border-b border-white/10 pb-3">
+                            {col.title}
+                        </p>
+                        <ul className="flex flex-col gap-3">
+                            {col.items.map((item) => (
+                                <li key={item} className="font-body text-xs sm:text-sm text-dark-text flex items-center gap-2.5">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-accent-violet flex-shrink-0"></span>
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))}
+            </div>
 
         </section>
     );

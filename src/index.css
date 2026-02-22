@@ -4,7 +4,8 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* Locomotive scroll handles this */
+    scroll-behavior: auto;
   }
 
   body {
@@ -30,6 +31,37 @@
 
   body.menu-open {
     @apply overflow-hidden;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #8b5cf6; /* accent-violet */
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7c3aed;
+  }
+
+  /* Locomotive Scrollbar Styling */
+  .c-scrollbar {
+    opacity: 1 !important;
+  }
+
+  .c-scrollbar_thumb {
+    background-color: #8b5cf6 !important;
+    opacity: 1 !important;
+    width: 6px !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
   }
 }
 

@@ -1,5 +1,5 @@
 const Marquee = () => {
-    const text = "contact ✿ graphic designer ✿ ui/ux ✿ brand design ✿ ";
+    const text = "✿ graphic designer ✿ ui/ux ✿ figma expert";
     const repeatedText = Array(4).fill(text).join('');
 
     return (

@@ -8,7 +8,9 @@ import Experience from './components/Experience';
 import Process from './components/Process';
 import Projects from './components/Projects';
 import Marquee from './components/Marquee';
+import Contact from './components/Contact';
 import Footer from './components/Footer';
+import SmoothScroll from './components/SmoothScroll';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,16 +30,19 @@ function App() {
       <Header toggleMenu={() => setIsMenuOpen(true)} />
       <NavOverlay isOpen={isMenuOpen} closeMenu={() => setIsMenuOpen(false)} />
 
-      <main className="relative z-10 w-full flex flex-col items-center">
-        <Hero />
-        <About />
-        <Experience />
-        <Process />
-        <Projects />
-        <Marquee />
-      </main>
+      <SmoothScroll>
+        <main className="relative z-10 w-full flex flex-col items-center">
+          <Hero />
+          <About />
+          <Experience />
+          <Process />
+          <Projects />
+          <Marquee />
+          <Contact />
+        </main>
 
-      <Footer />
+        <Footer />
+      </SmoothScroll>
     </div>
   );
 }

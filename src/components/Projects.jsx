@@ -1,146 +1,333 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const useScrollReveal = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const ref = useRef(null);
+const projectsData = [
+    {
+        id: 1,
+        index: '01',
+        title: 'Nova App',
+        category: 'Mobile Application Design',
+        year: '2024',
+        image: '/project1.png',
+        images: ['/project1.png', '/project2.png', '/project1.png'],
+        tags: ['UX', 'Mobile', 'Figma'],
+        desc: 'Nova App is a lifestyle and productivity mobile application focused on minimalist UI, smooth micro-interactions, and an intuitive user flow. The project involved full end-to-end product design from research, wireframing, and usability testing to final high-fidelity prototypes.',
+        role: 'UX/UI Designer',
+        duration: '6 weeks',
+    },
+    {
+        id: 2,
+        index: '02',
+        title: 'Lumina Studio',
+        category: 'Brand Identity System',
+        year: '2024',
+        image: '/project2.png',
+        images: ['/project2.png', '/project1.png', '/project2.png'],
+        tags: ['Branding', 'Visual Design'],
+        desc: 'Lumina Studio is a full brand identity system created for a creative photography studio. Includes logo design, typography system, color palette, and brand guidelines — crafted to feel premium, modern, and timeless.',
+        role: 'Brand Designer',
+        duration: '4 weeks',
+    },
+    {
+        id: 3,
+        index: '03',
+        title: 'Aurora Market',
+        category: 'E-Commerce Platform',
+        year: '2023',
+        image: '/project1.png',
+        images: ['/project1.png', '/project2.png', '/project1.png'],
+        tags: ['UI', 'Web Design', 'Figma'],
+        desc: 'Aurora Market is a fully designed e-commerce platform for an artisanal goods brand. The design prioritizes an editorial feel, rich product photography, and a seamless checkout experience across all device sizes.',
+        role: 'UI Designer',
+        duration: '8 weeks',
+    },
+    {
+        id: 4,
+        index: '04',
+        title: 'Nexus Dashboard',
+        category: 'SaaS Product Design',
+        year: '2023',
+        image: '/project2.png',
+        images: ['/project2.png', '/project1.png', '/project2.png'],
+        tags: ['Dashboard', 'Design System'],
+        desc: 'Nexus is a dense SaaS analytics dashboard built around clarity and performance. Designed a scalable component library in Figma that supports light/dark modes and multiple user roles — enabling the engineering team to ship fast.',
+        role: 'Product Designer',
+        duration: '10 weeks',
+    },
+];
+
+// ─── Project Detail Modal ───────────────────────────────────────────────
+const ProjectModal = ({ project, onClose }) => {
+    const modalRef = useRef(null);
+    const [activeImg, setActiveImg] = useState(0);
 
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    observer.unobserve(entry.target);
-                }
-            },
-            { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+        // Animate in
+        gsap.fromTo(modalRef.current,
+            { opacity: 0, y: 40 },
+            { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
         );
-
-        if (ref.current) observer.observe(ref.current);
-        return () => { if (ref.current) observer.unobserve(ref.current); };
+        // Lock body scroll
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = ''; };
     }, []);
 
-    return { ref, isVisible };
-};
+    const handleClose = () => {
+        gsap.to(modalRef.current, {
+            opacity: 0,
+            y: 30,
+            duration: 0.35,
+            ease: 'power2.in',
+            onComplete: onClose,
+        });
+    };
 
-const ProjectCard = ({ title, category, imageSrc, delay }) => {
-    const { ref, isVisible } = useScrollReveal();
+    // Close on Escape key
+    useEffect(() => {
+        const handler = (e) => { if (e.key === 'Escape') handleClose(); };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, []);
 
     return (
-        <article
-            ref={ref}
-            className={`group relative transition-all duration-[800ms] ease-out outline-none ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
-                }`}
-            style={{ transitionDelay: `${delay}ms` }}
-        >
-            <a href="#" className="block outline-none cursor-none-if-custom">
-                <div className="relative rounded-[20px] sm:rounded-[28px] md:rounded-[32px] overflow-hidden aspect-[4/3] bg-accent group-hover:shadow-2xl transition-all duration-[600ms] group-hover:-translate-y-2 transform-gpu translate-z-0">
-                    <img
-                        src={imageSrc}
-                        alt={`${title} — ${category}`}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-[800ms] group-hover:scale-110"
-                    />
+        <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-dark-bg/80 backdrop-blur-md"
+                onClick={handleClose}
+            />
 
-                    <div className="absolute top-0 left-0 w-full h-full bg-primary-text/0 group-hover:bg-primary-text/10 transition-colors duration-500 rounded-[20px] sm:rounded-[28px] md:rounded-[32px] pointer-events-none"></div>
-
-                    {/* Rotating Badge */}
-                    <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] rounded-full bg-white/90 backdrop-blur-sm text-primary-text flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 group-hover:bg-accent-violet group-hover:text-white transition-all duration-500 z-10 shadow-xl overflow-hidden">
-                        <div className="absolute inset-1.5 sm:inset-2 animate-[spin_8s_linear_infinite]">
-                            <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
-                                <path id={`circlePath-${title.replace(/\s+/g, '')}`} d="M 50,50 m -35,0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
-                                <text fill="currentColor" fontSize="11" fontFamily="Inter, sans-serif" letterSpacing="1.5" fontWeight="600" textTransform="uppercase">
-                                    <textPath href={`#circlePath-${title.replace(/\s+/g, '')}`} startOffset="0%">
-                                        PROJECT VIEW &bull; PROJECT VIEW &bull;
-                                    </textPath>
-                                </text>
-                            </svg>
-                        </div>
-                        {/* Perfectly Centered Arrow */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="pt-4 sm:pt-6 px-1 sm:px-2 flex justify-between items-start">
-                    <div>
-                        <h3 className="font-display text-[clamp(20px,3vw,36px)] uppercase tracking-[0.5px] sm:tracking-[1px] mb-1 group-hover:text-accent-violet transition-colors">
-                            {title}
+            {/* Modal Panel */}
+            <div
+                ref={modalRef}
+                className="relative z-10 w-full sm:w-[90vw] max-w-5xl max-h-[90vh] bg-dark-bg border border-white/10 rounded-t-[28px] sm:rounded-[28px] overflow-y-auto"
+            >
+                {/* Header */}
+                <div className="sticky top-0 z-20 flex items-center justify-between px-6 sm:px-10 py-5 bg-dark-bg/95 backdrop-blur-sm border-b border-white/10">
+                    <div className="flex items-baseline gap-4">
+                        <span className="font-body text-[10px] font-bold tracking-[3px] uppercase text-accent-violet">
+                            {project.index}
+                        </span>
+                        <h3 className="font-display text-2xl sm:text-4xl uppercase leading-none tracking-[-0.5px] text-dark-text">
+                            {project.title}
                         </h3>
-                        <p className="font-serif italic text-[13px] sm:text-[15px] text-primary-text/60 tracking-[0.5px]">
-                            {category}
-                        </p>
+                    </div>
+                    <button
+                        onClick={handleClose}
+                        className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-dark-text/60 hover:text-dark-text hover:border-accent-violet transition-colors duration-300"
+                        aria-label="Close"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div className="px-6 sm:px-10 py-8 sm:py-10 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
+                    {/* Left: Images */}
+                    <div className="flex flex-col gap-4">
+                        <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-white/5">
+                            <img
+                                src={project.images[activeImg]}
+                                alt={project.title}
+                                className="w-full h-full object-cover transition-opacity duration-300"
+                            />
+                        </div>
+                        {/* Thumbnails */}
+                        <div className="flex gap-3">
+                            {project.images.map((img, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setActiveImg(i)}
+                                    className={`flex-1 aspect-[4/3] rounded-xl overflow-hidden border-2 transition-all duration-300 ${activeImg === i ? 'border-accent-violet' : 'border-transparent opacity-50 hover:opacity-75'}`}
+                                >
+                                    <img src={img} alt="" className="w-full h-full object-cover" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Right: Details */}
+                    <div className="flex flex-col gap-6 sm:gap-8">
+                        {/* Meta */}
+                        <div className="grid grid-cols-3 gap-4 pb-6 border-b border-white/10">
+                            <div>
+                                <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-accent-violet mb-1.5">Year</p>
+                                <p className="font-display text-xl uppercase text-dark-text">{project.year}</p>
+                            </div>
+                            <div>
+                                <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-accent-violet mb-1.5">Role</p>
+                                <p className="font-display text-xl uppercase text-dark-text leading-tight">{project.role}</p>
+                            </div>
+                            <div>
+                                <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-accent-violet mb-1.5">Duration</p>
+                                <p className="font-display text-xl uppercase text-dark-text">{project.duration}</p>
+                            </div>
+                        </div>
+
+                        {/* Category */}
+                        <div>
+                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-white/30 mb-2">Category</p>
+                            <p className="font-serif italic text-lg sm:text-xl text-dark-text/70">{project.category}</p>
+                        </div>
+
+                        {/* Description */}
+                        <div>
+                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-white/30 mb-3">Overview</p>
+                            <p className="font-body text-sm sm:text-base leading-relaxed text-dark-text/60">
+                                {project.desc}
+                            </p>
+                        </div>
+
+                        {/* Tags */}
+                        <div>
+                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-white/30 mb-3">Tags</p>
+                            <div className="flex flex-wrap gap-2">
+                                {project.tags.map(tag => (
+                                    <span key={tag} className="font-body text-[10px] font-bold tracking-[2px] uppercase px-3 py-1.5 rounded-full border border-accent-violet text-accent-violet">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
-            </a>
-        </article>
+            </div>
+        </div>
     );
 };
 
+// ─── Main Projects Section ───────────────────────────────────────────────
 const Projects = () => {
     const container = useRef(null);
-    const [showAll, setShowAll] = useState(false);
+    const [hoveredId, setHoveredId] = useState(null);
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [previewSrc, setPreviewSrc] = useState(null);
+    const previewRef = useRef(null);
 
     useGSAP(() => {
-        gsap.from('.projects-header-anim', {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: container.current,
-                start: 'top 85%',
-                toggleActions: 'play reverse play reverse'
-            }
+        gsap.from('.proj-title', {
+            y: 70, opacity: 0, duration: 1.2, ease: 'power4.out',
+            scrollTrigger: { trigger: '.proj-title', start: 'top 88%' }
+        });
+        gsap.from('.proj-divider', {
+            scaleX: 0, transformOrigin: 'left center', duration: 1.2, ease: 'power3.inOut',
+            scrollTrigger: { trigger: '.proj-divider', start: 'top 90%' }
+        });
+        gsap.from('.proj-row', {
+            y: 40, opacity: 0, stagger: 0.12, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: '.proj-list', start: 'top 82%' }
         });
     }, { scope: container });
 
-    const projectsData = [
-        { id: 1, title: 'Nova App', category: 'Mobile application design', image: '/project1.png' },
-        { id: 2, title: 'Lumina Studio', category: 'Brand identity system', image: '/project2.png' },
-        { id: 3, title: 'Aurora Market', category: 'E-commerce platform', image: '/project1.png' },
-        { id: 4, title: 'Nexus Dashboard', category: 'SaaS product design', image: '/project2.png' },
-    ];
+    const handleMouseMove = (e) => {
+        if (!previewRef.current) return;
+        gsap.to(previewRef.current, {
+            x: e.clientX - 120, y: e.clientY - 80,
+            duration: 0.4, ease: 'power2.out',
+        });
+    };
 
-    const visibleProjects = showAll ? projectsData : projectsData.slice(0, 2);
+    const handleRowEnter = (project) => {
+        setHoveredId(project.id);
+        setPreviewSrc(project.image);
+        if (previewRef.current)
+            gsap.to(previewRef.current, { opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out' });
+    };
+
+    const handleRowLeave = () => {
+        setHoveredId(null);
+        if (previewRef.current)
+            gsap.to(previewRef.current, { opacity: 0, scale: 0.88, duration: 0.3, ease: 'power2.in' });
+    };
 
     return (
-        <section ref={container} id="projects" className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-20 relative z-20 overflow-hidden">
-            <div className="projects-header-anim mb-10 sm:mb-12 md:mb-16">
-                <h2 className="font-display text-[clamp(32px,8vw,90px)] uppercase leading-[1] tracking-[-1px]">
-                    <span className="font-serif italic lowercase tracking-[1px] font-normal text-accent-violet">Selected </span>
-                    Projects
-                </h2>
+        <section
+            ref={container}
+            id="projects"
+            className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-24 md:py-32 relative z-20"
+            onMouseMove={handleMouseMove}
+        >
+            {/* Floating cursor preview */}
+            <div
+                ref={previewRef}
+                className="fixed top-0 left-0 w-[240px] h-[160px] rounded-2xl overflow-hidden pointer-events-none z-[200] opacity-0 scale-90"
+                style={{ willChange: 'transform' }}
+            >
+                {previewSrc && <img src={previewSrc} alt="" className="w-full h-full object-cover" />}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-10 lg:gap-16">
-                {visibleProjects.map((project, index) => (
-                    <ProjectCard
+            {/* Header */}
+            <div className="proj-title flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
+                <h2 className="font-display text-[clamp(32px,8vw,100px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px]">
+                    <span className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Selected </span>
+                    Projects
+                </h2>
+                <p className="font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-primary-text/40 font-semibold sm:mb-4">
+                    {projectsData.length} Works
+                </p>
+            </div>
+
+            <div className="proj-divider w-full h-[1px] bg-primary-text/15 mb-0" />
+
+            {/* Project Rows */}
+            <div className="proj-list flex flex-col">
+                {projectsData.map((project) => (
+                    <div
                         key={project.id}
-                        title={project.title}
-                        category={project.category}
-                        imageSrc={project.image}
-                        delay={(index % 4) * 150}
-                    />
+                        className="proj-row group relative border-b border-primary-text/10"
+                        onMouseEnter={() => handleRowEnter(project)}
+                        onMouseLeave={handleRowLeave}
+                    >
+                        <button
+                            onClick={() => setSelectedProject(project)}
+                            className={`w-full text-left flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 py-7 sm:py-9 transition-all duration-300 ${hoveredId === project.id ? 'pl-4 sm:pl-8' : 'pl-0'}`}
+                        >
+                            <span className={`font-body text-[10px] font-bold tracking-[3px] uppercase transition-colors duration-300 sm:w-16 flex-shrink-0 ${hoveredId === project.id ? 'text-accent-violet' : 'text-primary-text/90'}`}>
+                                {project.index}
+                            </span>
+                            <div className="flex-1 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6">
+                                <h3 className={`font-display text-[clamp(26px,4.5vw,60px)] uppercase leading-none tracking-[-0.5px] transition-colors duration-300 ${hoveredId === project.id ? 'text-accent-violet' : 'text-primary-text'}`}>
+                                    {project.title}
+                                </h3>
+                                <span className="font-serif italic text-sm sm:text-base text-primary-text/80">
+                                    {project.category}
+                                </span>
+                            </div>
+                            <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+                                {project.tags.map(tag => (
+                                    <span key={tag} className={`font-body text-[9px] font-bold tracking-[2px] uppercase px-2.5 py-1 rounded-full border transition-all duration-300 ${hoveredId === project.id ? 'border-accent-violet text-accent-violet' : 'border-primary-text/15 text-primary-text/60'}`}>
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="flex items-center gap-4 sm:gap-6 sm:ml-6 flex-shrink-0">
+                                <span className={`font-body text-[10px] sm:text-xs font-semibold tracking-[2px] uppercase transition-colors duration-300 ${hoveredId === project.id ? 'text-primary-text/80' : 'text-primary-text/60'}`}>
+                                    {project.year}
+                                </span>
+                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border flex items-center justify-center transition-all duration-300 flex-shrink-0 ${hoveredId === project.id ? 'bg-accent-violet border-accent-violet text-dark-bg scale-110' : 'border-primary-text/20 text-primary-text/60'}`}>
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                 ))}
             </div>
 
-            {!showAll && projectsData.length > 2 && (
-                <div className="mt-10 sm:mt-12 md:mt-16 flex justify-center">
-                    <button
-                        onClick={() => setShowAll(true)}
-                        className="px-6 sm:px-8 py-3 sm:py-4 rounded-full border border-primary-text/20 text-primary-text font-body text-[10px] sm:text-xs uppercase tracking-[2px] sm:tracking-[3px] font-semibold hover:bg-accent-violet hover:text-white hover:border-accent-violet transition-all duration-300"
-                    >
-                        View More
-                    </button>
-                </div>
+            {/* Project Detail Modal */}
+            {selectedProject && (
+                <ProjectModal
+                    project={selectedProject}
+                    onClose={() => setSelectedProject(null)}
+                />
             )}
         </section>
     );
