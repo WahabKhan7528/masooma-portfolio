@@ -6,6 +6,7 @@
   html {
     /* Locomotive scroll handles this */
     scroll-behavior: auto;
+    user-select: none;
   }
 
   body {
