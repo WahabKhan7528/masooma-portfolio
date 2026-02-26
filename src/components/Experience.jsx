@@ -32,15 +32,33 @@ const jobs = [
     },
 ];
 
+// Reusable character-split reveal component
+const CharReveal = ({ children, className = '' }) => {
+    const chars = children.split('');
+    return (
+        <span className={className}>
+            {chars.map((char, i) => (
+                <span key={i} className="inline-block overflow-hidden">
+                    <span className="exp-char inline-block" style={{ display: char === ' ' ? 'inline' : 'inline-block' }}>
+                        {char === ' ' ? '\u00A0' : char}
+                    </span>
+                </span>
+            ))}
+        </span>
+    );
+};
+
 const Experience = () => {
     const container = useRef(null);
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
     useGSAP(() => {
-        // Heading animation
-        gsap.from('.exp-heading', {
-            y: 60,
+        // Character-split heading reveal
+        gsap.from('.exp-char', {
+            y: 100,
             opacity: 0,
+            rotateX: -90,
+            stagger: 0.03,
             duration: 1.2,
             ease: 'power4.out',
             scrollTrigger: {
@@ -84,9 +102,9 @@ const Experience = () => {
         >
             {/* Section Header */}
             <div className="exp-heading flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-4">
-                <h2 className="font-display text-[clamp(36px,9vw,100px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px]">
-                    <span className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Selected </span>
-                    Experience
+                <h2 className="font-display text-[clamp(36px,9vw,100px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px] perspective-[1000px]">
+                    <CharReveal className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Selected </CharReveal>
+                    <CharReveal>Experience</CharReveal>
                 </h2>
                 <p className="font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-primary-text/40 font-semibold sm:mb-3">
                     {jobs.length} Roles

@@ -5,6 +5,22 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Reusable character-split reveal component
+const CharReveal = ({ children, className = '' }) => {
+    const chars = children.split('');
+    return (
+        <span className={className}>
+            {chars.map((char, i) => (
+                <span key={i} className="inline-block overflow-hidden">
+                    <span className="proj-char inline-block" style={{ display: char === ' ' ? 'inline' : 'inline-block' }}>
+                        {char === ' ' ? '\u00A0' : char}
+                    </span>
+                </span>
+            ))}
+        </span>
+    );
+};
+
 const projectsData = [
     {
         id: 1,
@@ -104,10 +120,13 @@ const ProjectModal = ({ project, onClose }) => {
             {/* Modal Panel */}
             <div
                 ref={modalRef}
-                className="relative z-10 w-full sm:w-[90vw] max-w-5xl max-h-[90vh] bg-dark-bg border border-white/10 rounded-t-[28px] sm:rounded-[28px] overflow-y-auto"
+                className="relative z-10 w-full sm:w-[90vw] max-w-5xl max-h-[90vh] bg-dark-bg border border-dark-text/10 rounded-t-[28px] sm:rounded-[28px] overflow-y-auto overscroll-contain"
+                data-scroll-lock
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="sticky top-0 z-20 flex items-center justify-between px-6 sm:px-10 py-5 bg-dark-bg/95 backdrop-blur-sm border-b border-white/10">
+                <div className="sticky top-0 z-20 flex items-center justify-between px-6 sm:px-10 py-5 bg-dark-bg/95 backdrop-blur-sm border-b border-dark-text/10">
                     <div className="flex items-baseline gap-4">
                         <span className="font-body text-[10px] font-bold tracking-[3px] uppercase text-accent-violet">
                             {project.index}
@@ -118,7 +137,7 @@ const ProjectModal = ({ project, onClose }) => {
                     </div>
                     <button
                         onClick={handleClose}
-                        className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-dark-text/60 hover:text-dark-text hover:border-accent-violet transition-colors duration-300"
+                        className="w-10 h-10 rounded-full border border-dark-text/15 flex items-center justify-center text-dark-text/60 hover:text-dark-text hover:border-accent-violet transition-colors duration-300"
                         aria-label="Close"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +149,7 @@ const ProjectModal = ({ project, onClose }) => {
                 <div className="px-6 sm:px-10 py-8 sm:py-10 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
                     {/* Left: Images */}
                     <div className="flex flex-col gap-4">
-                        <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-white/5">
+                        <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-dark-text/5">
                             <img
                                 src={project.images[activeImg]}
                                 alt={project.title}
@@ -154,7 +173,7 @@ const ProjectModal = ({ project, onClose }) => {
                     {/* Right: Details */}
                     <div className="flex flex-col gap-6 sm:gap-8">
                         {/* Meta */}
-                        <div className="grid grid-cols-3 gap-4 pb-6 border-b border-white/10">
+                        <div className="grid grid-cols-3 gap-4 pb-6 border-b border-dark-text/10">
                             <div>
                                 <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-accent-violet mb-1.5">Year</p>
                                 <p className="font-display text-xl uppercase text-dark-text">{project.year}</p>
@@ -171,13 +190,13 @@ const ProjectModal = ({ project, onClose }) => {
 
                         {/* Category */}
                         <div>
-                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-white/30 mb-2">Category</p>
+                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-dark-text/30 mb-2">Category</p>
                             <p className="font-serif italic text-lg sm:text-xl text-dark-text/70">{project.category}</p>
                         </div>
 
                         {/* Description */}
                         <div>
-                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-white/30 mb-3">Overview</p>
+                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-dark-text/30 mb-3">Overview</p>
                             <p className="font-body text-sm sm:text-base leading-relaxed text-dark-text/60">
                                 {project.desc}
                             </p>
@@ -185,7 +204,7 @@ const ProjectModal = ({ project, onClose }) => {
 
                         {/* Tags */}
                         <div>
-                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-white/30 mb-3">Tags</p>
+                            <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-dark-text/30 mb-3">Tags</p>
                             <div className="flex flex-wrap gap-2">
                                 {project.tags.map(tag => (
                                     <span key={tag} className="font-body text-[10px] font-bold tracking-[2px] uppercase px-3 py-1.5 rounded-full border border-accent-violet text-accent-violet">
@@ -203,6 +222,9 @@ const ProjectModal = ({ project, onClose }) => {
     );
 };
 
+// Fixed categories for filter tabs based on feedback
+const allTags = ['All', 'UX', 'Figma', 'Web Design', 'Mobile'];
+
 // ─── Main Projects Section ───────────────────────────────────────────────
 const Projects = () => {
     const container = useRef(null);
@@ -210,10 +232,13 @@ const Projects = () => {
     const [selectedProject, setSelectedProject] = useState(null);
     const [previewSrc, setPreviewSrc] = useState(null);
     const previewRef = useRef(null);
+    const [activeFilter, setActiveFilter] = useState('All');
+    const [filteredProjects, setFilteredProjects] = useState(projectsData);
+    const listRef = useRef(null);
 
     useGSAP(() => {
-        gsap.from('.proj-title', {
-            y: 70, opacity: 0, duration: 1.2, ease: 'power4.out',
+        gsap.from('.proj-char', {
+            y: 100, opacity: 0, rotateX: -90, stagger: 0.03, duration: 1.2, ease: 'power4.out',
             scrollTrigger: { trigger: '.proj-title', start: 'top 88%' }
         });
         gsap.from('.proj-divider', {
@@ -226,6 +251,43 @@ const Projects = () => {
         });
     }, { scope: container });
 
+    // Handle filter change with GSAP animation
+    const handleFilterChange = (tag) => {
+        if (tag === activeFilter) return;
+        setActiveFilter(tag);
+
+        // Animate existing rows out
+        const rows = listRef.current?.querySelectorAll('.proj-row');
+        if (rows && rows.length > 0) {
+            gsap.to(rows, {
+                y: -20, opacity: 0, stagger: 0.04, duration: 0.3, ease: 'power2.in',
+                onComplete: () => {
+                    // Update filtered data
+                    const newFiltered = tag === 'All'
+                        ? projectsData
+                        : projectsData.filter(p => p.tags.includes(tag));
+                    setFilteredProjects(newFiltered);
+
+                    // Animate new rows in (needs a tick for React to render)
+                    requestAnimationFrame(() => {
+                        const newRows = listRef.current?.querySelectorAll('.proj-row');
+                        if (newRows) {
+                            gsap.fromTo(newRows,
+                                { y: 30, opacity: 0 },
+                                { y: 0, opacity: 1, stagger: 0.08, duration: 0.5, ease: 'power3.out' }
+                            );
+                        }
+                    });
+                }
+            });
+        } else {
+            const newFiltered = tag === 'All'
+                ? projectsData
+                : projectsData.filter(p => p.tags.includes(tag));
+            setFilteredProjects(newFiltered);
+        }
+    };
+
     const handleMouseMove = (e) => {
         if (!previewRef.current) return;
         gsap.to(previewRef.current, {
@@ -237,14 +299,31 @@ const Projects = () => {
     const handleRowEnter = (project) => {
         setHoveredId(project.id);
         setPreviewSrc(project.image);
-        if (previewRef.current)
+        if (previewRef.current) {
+            gsap.killTweensOf(previewRef.current); // Cancel any pending leave fade-out
             gsap.to(previewRef.current, { opacity: 1, scale: 1, duration: 0.35, ease: 'power2.out' });
+        }
     };
 
     const handleRowLeave = () => {
         setHoveredId(null);
-        if (previewRef.current)
-            gsap.to(previewRef.current, { opacity: 0, scale: 0.88, duration: 0.3, ease: 'power2.in' });
+        // Only fade out visually — do NOT null previewSrc here,
+        // because mouseEnter on the next row fires right after and needs the image to stay.
+        if (previewRef.current) {
+            gsap.to(previewRef.current, {
+                opacity: 0, scale: 0.88, duration: 0.3, ease: 'power2.in',
+            });
+        }
+    };
+
+    // Safety net: if cursor leaves the entire projects section, force-hide everything
+    const handleSectionLeave = () => {
+        setHoveredId(null);
+        if (previewRef.current) {
+            gsap.killTweensOf(previewRef.current);
+            gsap.set(previewRef.current, { opacity: 0, scale: 0.88 });
+        }
+        setPreviewSrc(null);
     };
 
     return (
@@ -252,7 +331,7 @@ const Projects = () => {
             ref={container}
             id="projects"
             className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-24 md:py-32 relative z-20"
-            onMouseMove={handleMouseMove}
+            onMouseLeave={handleSectionLeave}
         >
             {/* Floating cursor preview */}
             <div
@@ -263,27 +342,43 @@ const Projects = () => {
                 {previewSrc && <img src={previewSrc} alt="" className="w-full h-full object-cover" />}
             </div>
 
-            {/* Header */}
             <div className="proj-title flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
-                <h2 className="font-display text-[clamp(32px,8vw,100px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px]">
-                    <span className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Selected </span>
-                    Projects
+                <h2 className="font-display text-[clamp(32px,8vw,100px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px] perspective-[1000px]">
+                    <CharReveal className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Selected </CharReveal>
+                    <CharReveal>Projects</CharReveal>
                 </h2>
                 <p className="font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-primary-text/40 font-semibold sm:mb-4">
-                    {projectsData.length} Works
+                    {filteredProjects.length} Works
                 </p>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex flex-wrap items-center gap-2 mb-6 sm:mb-8">
+                {allTags.map((tag) => (
+                    <button
+                        key={tag}
+                        onClick={() => handleFilterChange(tag)}
+                        className={`px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-body text-[10px] sm:text-xs font-bold tracking-[2px] uppercase transition-all duration-300 border ${activeFilter === tag
+                            ? 'bg-accent-violet text-dark-bg border-accent-violet'
+                            : 'bg-transparent text-primary-text/60 border-primary-text/15 hover:border-accent-violet hover:text-accent-violet'
+                            }`}
+                    >
+                        {tag}
+                    </button>
+                ))}
             </div>
 
             <div className="proj-divider w-full h-[1px] bg-primary-text/15 mb-0" />
 
             {/* Project Rows */}
-            <div className="proj-list flex flex-col">
-                {projectsData.map((project) => (
+            <div ref={listRef} className="proj-list flex flex-col">
+                {filteredProjects.map((project) => (
                     <div
                         key={project.id}
                         className="proj-row group relative border-b border-primary-text/10"
                         onMouseEnter={() => handleRowEnter(project)}
                         onMouseLeave={handleRowLeave}
+                        onMouseMove={handleMouseMove}
                     >
                         <button
                             onClick={() => setSelectedProject(project)}
@@ -321,6 +416,13 @@ const Projects = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Empty state */}
+            {filteredProjects.length === 0 && (
+                <div className="py-16 text-center">
+                    <p className="font-body text-sm text-primary-text/40 uppercase tracking-[2px]">No projects match this filter</p>
+                </div>
+            )}
 
             {/* Project Detail Modal */}
             {selectedProject && (

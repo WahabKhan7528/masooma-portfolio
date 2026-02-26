@@ -9,11 +9,15 @@ import Process from './components/Process';
 import Projects from './components/Projects';
 import Marquee from './components/Marquee';
 import Contact from './components/Contact';
+import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import SmoothScroll from './components/SmoothScroll';
 
+import Preloader from './components/Preloader';
+
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -25,6 +29,8 @@ function App() {
 
   return (
     <div className="relative w-full min-h-screen">
+      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+
       <CustomCursor />
 
       <Header toggleMenu={() => setIsMenuOpen(true)} />
@@ -38,6 +44,7 @@ function App() {
           <Process />
           <Projects />
           <Marquee />
+          <Testimonials />
           <Contact />
         </main>
 

@@ -5,12 +5,37 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Reusable character-split reveal component
+const CharReveal = ({ children, className = '' }) => {
+    const chars = children.split('');
+    return (
+        <span className={className}>
+            {chars.map((char, i) => (
+                <span key={i} className="inline-block overflow-hidden">
+                    <span className="contact-char inline-block" style={{ display: char === ' ' ? 'inline' : 'inline-block' }}>
+                        {char === ' ' ? '\u00A0' : char}
+                    </span>
+                </span>
+            ))}
+        </span>
+    );
+};
+
 const Contact = () => {
     const container = useRef(null);
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [submitted, setSubmitted] = useState(false);
 
     useGSAP(() => {
+        gsap.from('.contact-char', {
+            y: 100,
+            opacity: 0,
+            rotateX: -90,
+            stagger: 0.03,
+            duration: 1.2,
+            ease: 'power4.out',
+            scrollTrigger: { trigger: '.contact-card', start: 'top 85%' }
+        });
         gsap.from('.contact-card', {
             y: 60, opacity: 0, duration: 1.2, ease: 'power4.out',
             scrollTrigger: { trigger: '.contact-card', start: 'top 85%' }
@@ -33,14 +58,14 @@ const Contact = () => {
             className="w-full flex items-center justify-center py-20 sm:py-32"
         >
             {/* 80vw x 80vh Centered Card */}
-            <div className="contact-card bg-dark-bg rounded-[32px] sm:rounded-[60px] w-[90vw] lg:w-[80vw] h-auto lg:h-[80vh] px-8 sm:px-16 md:px-20 py-12 sm:py-16 md:py-20 text-dark-text flex flex-col justify-between shadow-2xl overflow-hidden">
+            <div className="contact-card bg-dark-bg rounded-[32px] sm:rounded-[60px] w-[90vw] lg:w-[80vw] h-auto lg:min-h-[80vh] px-8 sm:px-16 md:px-20 py-12 sm:py-16 md:py-20 text-dark-text flex flex-col justify-between shadow-2xl overflow-hidden">
 
                 <div>
                     {/* Header */}
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
-                        <h2 className="font-display text-[clamp(28px,6vw,80px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px]">
-                            <span className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Get In </span>
-                            Touch
+                        <h2 className="font-display text-[clamp(28px,6vw,80px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px] perspective-[1000px]">
+                            <CharReveal className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Get In </CharReveal>
+                            <CharReveal>Touch</CharReveal>
                         </h2>
                         <p className="font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-dark-text/40 font-semibold sm:mb-2">
                             Let's work together
@@ -48,7 +73,7 @@ const Contact = () => {
                     </div>
 
                     {/* Divider */}
-                    <div className="w-full h-[1px] bg-white/10 mb-8 sm:mb-12" />
+                    <div className="w-full h-[1px] bg-dark-text/10 mb-8 sm:mb-12" />
                 </div>
 
                 <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 overflow-visible">
@@ -96,7 +121,7 @@ const Contact = () => {
                                     onChange={handleChange}
                                     required
                                     placeholder="Your Name"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 font-body text-sm text-dark-text placeholder:text-dark-text/20 focus:outline-none focus:border-accent-violet transition-colors duration-300"
+                                    className="w-full bg-dark-text/5 border border-dark-text/10 rounded-xl px-5 py-3.5 font-body text-sm text-dark-text placeholder:text-dark-text/20 focus:outline-none focus:border-accent-violet transition-colors duration-300"
                                 />
                             </div>
 
@@ -112,7 +137,7 @@ const Contact = () => {
                                     onChange={handleChange}
                                     required
                                     placeholder="your@email.com"
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 font-body text-sm text-dark-text placeholder:text-dark-text/20 focus:outline-none focus:border-accent-violet transition-colors duration-300"
+                                    className="w-full bg-dark-text/5 border border-dark-text/10 rounded-xl px-5 py-3.5 font-body text-sm text-dark-text placeholder:text-dark-text/20 focus:outline-none focus:border-accent-violet transition-colors duration-300"
                                 />
                             </div>
 
@@ -128,14 +153,14 @@ const Contact = () => {
                                     required
                                     rows={4}
                                     placeholder="Your message..."
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 font-body text-sm text-dark-text placeholder:text-dark-text/20 focus:outline-none focus:border-accent-violet transition-colors duration-300 resize-none"
+                                    className="w-full bg-dark-text/5 border border-dark-text/10 rounded-xl px-5 py-3.5 font-body text-sm text-dark-text placeholder:text-dark-text/20 focus:outline-none focus:border-accent-violet transition-colors duration-300 resize-none"
                                 />
                             </div>
 
                             {/* Submit */}
                             <button
                                 type="submit"
-                                className="self-start group flex items-center gap-3 bg-accent-violet text-dark-bg px-8 py-4 rounded-full font-body text-xs font-bold tracking-[2px] uppercase hover:bg-white hover:text-dark-bg transition-colors duration-300 mt-2"
+                                className="self-start group flex items-center gap-3 bg-accent-violet text-dark-bg px-8 py-4 rounded-full font-body text-xs font-bold tracking-[2px] uppercase hover:bg-dark-text hover:text-dark-bg transition-colors duration-300 mt-2"
                             >
                                 Send
                                 <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -40,7 +40,7 @@ const Footer = () => {
             <div className="ft-inner flex-1 max-w-5xl w-full mx-auto px-6 sm:px-10 py-8 sm:py-10 flex flex-col items-center justify-between gap-6">
 
                 {/* ── Availability badge ── */}
-                <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2">
+                <div className="flex items-center gap-2 bg-dark-text/5 border border-dark-text/10 rounded-full px-4 py-2">
                     <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
                     <span className="font-body text-[10px] font-bold tracking-[3px] uppercase text-dark-text/60">
                         Available for freelance work
@@ -63,7 +63,7 @@ const Footer = () => {
                 {/* ── Giant email pill CTA ── */}
                 <a
                     href="mailto:masooma@example.com"
-                    className="group relative inline-flex items-center justify-center gap-4 border border-white/15 hover:border-accent-violet text-dark-text hover:text-accent-violet rounded-full px-8 sm:px-12 py-5 sm:py-6 transition-all duration-500"
+                    className="group relative inline-flex items-center justify-center gap-4 border border-dark-text/15 hover:border-accent-violet text-dark-text hover:text-accent-violet rounded-full px-8 sm:px-12 py-5 sm:py-6 transition-all duration-500"
                 >
                     <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-accent-violet/5 blur-sm" />
                     <span className="font-display text-lg sm:text-2xl md:text-3xl  tracking-[-0.5px] relative z-10">
@@ -75,7 +75,7 @@ const Footer = () => {
                 </a>
 
                 {/* ── Stats row ── */}
-                <div className="ft-stats w-full grid grid-cols-3 gap-4 border border-white/8 rounded-2xl p-6 sm:p-8">
+                <div className="ft-stats w-full grid grid-cols-3 gap-4 border border-dark-text/8 rounded-2xl p-6 sm:p-8">
                     {[
                         { num: '1+', label: 'Years Experience' },
                         { num: '10+', label: 'Projects Delivered' },
@@ -130,7 +130,7 @@ const Footer = () => {
                 </div>
 
                 {/* ── Bottom bar ── */}
-                <div className="w-full border-t border-white/8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div className="w-full border-t border-dark-text/8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
                     <p className="font-body text-[10px] tracking-[2px] uppercase text-dark-text/20">
                         © 2026 Masooma Batool. All rights reserved.
                     </p>

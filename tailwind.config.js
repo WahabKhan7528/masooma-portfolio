@@ -4,24 +4,25 @@ export default {
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
     ],
+    darkMode: 'class',
     theme: {
         extend: {
             colors: {
                 primary: {
-                    bg: '#E6E1DD',
-                    text: '#1A1A1A',
+                    bg: 'rgb(var(--color-primary-bg) / <alpha-value>)',
+                    text: 'rgb(var(--color-primary-text) / <alpha-value>)',
                 },
                 dark: {
-                    bg: '#1A1A1A',
-                    text: '#E6E1DD',
+                    bg: 'rgb(var(--color-dark-bg) / <alpha-value>)',
+                    text: 'rgb(var(--color-dark-text) / <alpha-value>)',
                 },
-                warm: '#FCF8F5',
+                warm: 'rgb(var(--color-warm) / <alpha-value>)',
                 accent: {
-                    DEFAULT: '#C6BBB2',
-                    violet: '#A199FF',
+                    DEFAULT: 'rgb(var(--color-accent) / <alpha-value>)',
+                    violet: 'rgb(var(--color-accent-violet) / <alpha-value>)',
                 },
                 grid: {
-                    line: 'rgba(0, 0, 0, 0.06)',
+                    line: 'var(--color-grid-line)',
                 }
             },
             fontFamily: {

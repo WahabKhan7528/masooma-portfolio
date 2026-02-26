@@ -24,7 +24,7 @@ const NavOverlay = ({ isOpen, closeMenu }) => {
         >
             <button
                 onClick={closeMenu}
-                className="absolute top-4 sm:top-6 right-4 sm:right-5 md:right-10 bg-accent-violet text-dark-bg border-none font-body text-[10px] sm:text-xs font-semibold tracking-[2px] sm:tracking-[3px] uppercase cursor-pointer px-4 sm:px-6 py-2 sm:py-2.5 rounded-full transition-colors duration-400 hover:bg-white hover:text-primary-text"
+                className="absolute top-4 sm:top-6 right-4 sm:right-5 md:right-10 bg-accent-violet text-dark-bg border-none font-body text-[10px] sm:text-xs font-semibold tracking-[2px] sm:tracking-[3px] uppercase cursor-pointer px-4 sm:px-6 py-2 sm:py-2.5 rounded-full transition-colors duration-400 hover:bg-dark-text hover:text-dark-bg"
             >
                 Close
             </button>
@@ -34,7 +34,12 @@ const NavOverlay = ({ isOpen, closeMenu }) => {
                     <li key={link.name} className="overflow-hidden">
                         <a
                             href={link.href}
-                            onClick={closeMenu}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                closeMenu();
+                                const el = document.getElementById(link.href.replace('#', ''));
+                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                            }}
                             className={`block font-display text-4xl sm:text-5xl md:text-7xl lg:text-[90px] uppercase tracking-[2px] text-dark-text transition-all duration-[800ms] ease-out hover:text-accent-violet transform hover:translate-x-5 ${renderLinks ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
                                 }`}
                             style={{ transitionDelay: `${index * 100}ms` }}
