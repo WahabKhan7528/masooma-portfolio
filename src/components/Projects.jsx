@@ -28,10 +28,10 @@ const projectsData = [
         title: 'Elan Dance Studio',
         category: 'Web Design ',
         year: '2025',
-        image: '/project1.png',
-        images: ['/project1.png', '/project2.png', '/project1.png'],
+        image: '/elan/elan1.webp',
+        images: ['/elan/elan1.webp', '/elan/elan2.webp', '/elan/elan3.webp'],
         tags: ['UI/UX', 'Web', 'Figma', 'Responsive'],
-        desc: 'Elan Dance Studio is a web design project for a dance studio. The design is focused on a minimalist UI, smooth micro-interactions, and an intuitive user flow. The project involved full end-to-end product design from research, wireframing, and usability testing to final high-fidelity prototypes.',
+        desc: 'A bold and elegant website template for modern dance studios, featuring dramatic red tones and a sleek dark layout. Designed to highlight movement and emotion, it includes a dynamic hero section, studio gallery, and immersive visuals to create a premium, high-energy experience.',
         role: 'UX/UI Designer',
         duration: '4 weeks',
     },
@@ -41,10 +41,10 @@ const projectsData = [
         title: 'Apex',
         category: 'Venture and Investment',
         year: '2026',
-        image: '/project2.png',
-        images: ['/project2.png', '/project1.png', '/project2.png'],
+        image: '/apex/apex1.webp',
+        images: ['/apex/apex1.webp', '/apex/apex2.webp', '/apex/apex3.webp'],
         tags: ['Prototype', 'UI/UX', 'Web', 'Responsive'],
-        desc: 'Apex is a web design project for a venture and investment company. The design is focused on a minimalist UI, smooth micro-interactions, and an intuitive user flow. The project involved full end-to-end product design from research, wireframing, and usability testing to final high-fidelity prototypes.',
+        desc: 'A modern and professional website template designed for venture capital and investment firms. Featuring a sleek dark-blue interface, clean typography, and data-focused sections, the design highlights portfolio companies, impact metrics, and investment strategy with a strong, credible, and forward-thinking visual identity.',
         role: 'UI Designer',
         duration: '5 weeks',
     },
@@ -54,10 +54,10 @@ const projectsData = [
         title: 'Mentora',
         category: 'Online Education Platform',
         year: '2023',
-        image: '/project1.png',
-        images: ['/project1.png', '/project2.png', '/project1.png'],
+        image: '/mentora/mentora1.webp',
+        images: ['/mentora/mentora1.webp', '/mentora/mentora2.webp', '/mentora/mentora3.webp'],
         tags: ['UI/UX', 'Web Design', 'Figma', 'Responsive'],
-        desc: 'Aurora Market is a fully designed e-commerce platform for an artisanal goods brand. The design prioritizes an editorial feel, rich product photography, and a seamless checkout experience across all device sizes.',
+        desc: 'A modern and clean e-learning website design focused on practical skill development. It features clear call-to-actions, organized course categories, and a fully responsive layout for both desktop and mobile, ensuring a smooth and engaging user experience.',
         role: 'UI Designer',
         duration: '5 weeks',
     },
@@ -140,7 +140,7 @@ const ProjectModal = ({ project, onClose }) => {
                             <img
                                 src={project.images[activeImg]}
                                 alt={project.title}
-                                className="w-full h-full object-cover transition-opacity duration-300"
+                                className="w-full h-full object-contain transition-opacity duration-300"
                             />
                         </div>
                         {/* Thumbnails */}
@@ -151,7 +151,7 @@ const ProjectModal = ({ project, onClose }) => {
                                     onClick={() => setActiveImg(i)}
                                     className={`flex-1 aspect-[4/3] rounded-xl overflow-hidden border-2 transition-all duration-300 ${activeImg === i ? 'border-accent-violet' : 'border-transparent opacity-50 hover:opacity-75'}`}
                                 >
-                                    <img src={img} alt="" className="w-full h-full object-cover" />
+                                    <img src={img} alt="" className="w-full h-full object-contain" />
                                 </button>
                             ))}
                         </div>
@@ -283,10 +283,10 @@ const Projects = () => {
             {/* Floating cursor preview */}
             <div
                 ref={previewRef}
-                className="fixed top-0 left-0 w-[240px] h-[160px] rounded-2xl overflow-hidden pointer-events-none z-[200] opacity-0 scale-90"
+                className="fixed top-0 left-0 w-[240px] aspect-[4/3] h-auto rounded-2xl overflow-hidden pointer-events-none z-[200] opacity-0 scale-90"
                 style={{ willChange: 'transform' }}
             >
-                {previewSrc && <img src={previewSrc} alt="" className="w-full h-full object-cover" />}
+                {previewSrc && <img src={previewSrc} alt="" className="w-full h-full object-contain" />}
             </div>
 
             <div className="proj-title flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
@@ -349,7 +349,7 @@ const Projects = () => {
                 ))}
             </div>
 
-            
+
 
             {/* Project Detail Modal */}
             {selectedProject && (

@@ -8,31 +8,24 @@ gsap.registerPlugin(ScrollTrigger);
 const testimonials = [
     {
         id: 1,
-        quote: "Masooma's design sense is extraordinary. She transformed our brand identity into something truly memorable — every detail was considered and refined.",
-        name: 'Sarah Chen',
-        role: 'CEO, Lumina Studio',
-        initials: 'SC',
+        quote: "Masooma delivered exactly what we envisioned — a clean, modern, and highly professional design. Her attention to detail and understanding of UI/UX truly elevated our brand presence.",
+        name: 'Sarah Khan',
+        role: 'Founder, Elan Dance Studio',
+        initials: 'SK',
     },
     {
         id: 2,
-        quote: "Working with Masooma felt effortless. She understood our vision from the first call and delivered a product that exceeded all expectations.",
-        name: 'James Walker',
-        role: 'Founder, Nova App',
+        quote: "“Working with Masooma was a smooth and collaborative experience. She transformed our ideas into a visually stunning and user-friendly website that exceeded expectations.”",
+        name: 'Ali Raza',
+        role: 'Marketing Director, APEX',
         initials: 'JW',
     },
     {
         id: 3,
-        quote: "Her attention to micro-interactions and user flow is next-level. Our conversion rate jumped 40% after the redesign she led.",
-        name: 'Priya Patel',
-        role: 'Product Lead, Aurora Market',
-        initials: 'PP',
-    },
-    {
-        id: 4,
-        quote: "Masooma doesn't just design interfaces — she crafts experiences. Her design system became the backbone of our entire engineering workflow.",
-        name: 'Alex Rivera',
-        role: 'CTO, Nexus Analytics',
-        initials: 'AR',
+        quote: "Masooma has a strong design sense and a great eye for layout and typography. The final result was elegant, strategic, and perfectly aligned with our business goals",
+        name: 'Daniel Ahmed,',
+        role: 'CEO, Mentora',
+        initials: 'DA',
     },
 ];
 
