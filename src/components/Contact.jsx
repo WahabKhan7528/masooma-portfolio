@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import emailjs from '@emailjs/browser';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,8 +24,10 @@ const CharReveal = ({ children, className = '' }) => {
 
 const Contact = () => {
     const container = useRef(null);
+    const formRef = useRef(null);
     const [formData, setFormData] = useState({ name: '', email: '', message: '' });
     const [submitted, setSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useGSAP(() => {
         gsap.from('.contact-char', {
@@ -48,7 +51,24 @@ const Contact = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setSubmitted(true);
+        setIsSubmitting(true);
+
+        emailjs.sendForm(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            formRef.current,
+            import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        ).then(
+            () => {
+                setSubmitted(true);
+                setIsSubmitting(false);
+            },
+            (error) => {
+                console.error('FAILED...', error.text);
+                setIsSubmitting(false);
+                alert("Failed to send message. Please check your EmailJS configuration.");
+            }
+        );
     };
 
     return (
@@ -108,7 +128,7 @@ const Contact = () => {
 
                     {/* Right: Form */}
                     {!submitted ? (
-                        <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-4 sm:gap-6">
+                        <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col justify-center gap-4 sm:gap-6">
                             {/* Name */}
                             <div className="flex flex-col gap-1.5">
                                 <label className="font-body text-[10px] font-bold tracking-[3px] uppercase text-dark-text/40">
@@ -160,12 +180,15 @@ const Contact = () => {
                             {/* Submit */}
                             <button
                                 type="submit"
-                                className="self-start group flex items-center gap-3 bg-accent-violet text-dark-bg px-8 py-4 rounded-full font-body text-xs font-bold tracking-[2px] uppercase hover:bg-dark-text hover:text-dark-bg transition-colors duration-300 mt-2"
+                                disabled={isSubmitting}
+                                className={`self-start group flex items-center gap-3 bg-accent-violet text-dark-bg px-8 py-4 rounded-full font-body text-xs font-bold tracking-[2px] uppercase transition-colors duration-300 mt-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-dark-text hover:text-dark-bg'}`}
                             >
-                                Send
-                                <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
+                                {isSubmitting ? 'Sending...' : 'Send'}
+                                {!isSubmitting && (
+                                    <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                )}
                             </button>
                         </form>
                     ) : (
