@@ -55,19 +55,19 @@ const Footer = () => {
                     <h2 className="font-display text-[clamp(28px,6vw,72px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px]">
                         Have a project in mind?
                     </h2>
-                    <p className="font-body text-sm text-dark-text/40 max-w-sm">
+                    <p className="font-body text-sm text-dark-text/40">
                         I'm always open to discussing new projects, creative ideas, or opportunities.
                     </p>
                 </div>
 
                 {/* ── Giant email pill CTA ── */}
                 <a
-                    href="mailto:masooma@example.com"
+                    href="mailto:masooma0225@gmail.com"
                     className="group relative inline-flex items-center justify-center gap-4 border border-dark-text/15 hover:border-accent-violet text-dark-text hover:text-accent-violet rounded-full px-8 sm:px-12 py-5 sm:py-6 transition-all duration-500"
                 >
                     <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-accent-violet/5 blur-sm" />
                     <span className="font-display text-lg sm:text-2xl md:text-3xl  tracking-[-0.5px] relative z-10">
-                        masoomaasghar@gmail.com
+                        masooma0225@gmail.com
                     </span>
                     <svg className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 relative z-10 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
@@ -97,18 +97,16 @@ const Footer = () => {
                     <div className="flex flex-col items-center sm:items-start gap-2">
                         <p className="font-body text-[9px] font-bold tracking-[3px] uppercase text-dark-text/25">Socials</p>
                         <div className="flex items-center gap-6">
-                            {['LinkedIn', 'Behance', 'Instagram'].map(social => (
-                                <a
-                                    key={social}
-                                    href={`https://${social.toLowerCase()}.com`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group relative font-body text-[10px] sm:text-xs font-bold tracking-[3px] uppercase text-dark-text/40 hover:text-accent-violet transition-colors duration-300"
-                                >
-                                    {social}
-                                    <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-accent-violet transition-all duration-400 group-hover:w-full" />
-                                </a>
-                            ))}
+                            <a href="https://www.linkedin.com/in/masooma-batool-b9b679387" target="_blank" rel="noopener noreferrer"
+                                        className="group relative font-body text-[10px] font-bold tracking-[2px] uppercase text-dark-text/40 hover:text-accent-violet transition-colors duration-300">
+                                        LinkedIn
+                                        <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent-violet transition-all duration-300 group-hover:w-full" />
+                                    </a>
+                                    <a href="https://www.instagram.com/craf_to_ria/" target="_blank" rel="noopener noreferrer"
+                                        className="group relative font-body text-[10px] font-bold tracking-[2px] uppercase text-dark-text/40 hover:text-accent-violet transition-colors duration-300">
+                                        Instagram
+                                        <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent-violet transition-all duration-300 group-hover:w-full" />
+                                    </a>
                         </div>
                     </div>
 

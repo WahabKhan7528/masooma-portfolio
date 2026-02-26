@@ -54,10 +54,10 @@ const Contact = () => {
         setIsSubmitting(true);
 
         emailjs.sendForm(
-            import.meta.env.VITE_EMAILJS_SERVICE_ID,
-            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            import.meta.env.EMAILJS_SERVICE_ID,
+            import.meta.env.EMAILJS_TEMPLATE_ID,
             formRef.current,
-            import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+            import.meta.env.EMAILJS_PUBLIC_KEY
         ).then(
             () => {
                 setSubmitted(true);
@@ -108,19 +108,22 @@ const Contact = () => {
                             <div className="flex flex-col gap-1">
                                 <p className="font-body text-[10px] font-bold tracking-[3px] uppercase text-accent-violet">Email</p>
                                 <a href="mailto:masooma@example.com" className="font-body text-base sm:text-lg text-dark-text/80 hover:text-accent-violet transition-colors duration-300">
-                                    masooma@example.com
+                                    masooma0225@gmail.com
                                 </a>
                             </div>
                             <div className="flex flex-col gap-1.5">
                                 <p className="font-body text-[10px] font-bold tracking-[3px] uppercase text-accent-violet">Socials</p>
                                 <div className="flex gap-6">
-                                    {['LinkedIn', 'Behance', 'Instagram'].map(s => (
-                                        <a key={s} href={`https://${s.toLowerCase()}.com`} target="_blank" rel="noopener noreferrer"
-                                            className="group relative font-body text-[10px] font-bold tracking-[2px] uppercase text-dark-text/40 hover:text-accent-violet transition-colors duration-300">
-                                            {s}
-                                            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent-violet transition-all duration-300 group-hover:w-full" />
-                                        </a>
-                                    ))}
+                                    <a href="https://www.linkedin.com/in/masooma-batool-b9b679387" target="_blank" rel="noopener noreferrer"
+                                        className="group relative font-body text-[10px] font-bold tracking-[2px] uppercase text-dark-text/40 hover:text-accent-violet transition-colors duration-300">
+                                        LinkedIn
+                                        <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent-violet transition-all duration-300 group-hover:w-full" />
+                                    </a>
+                                    <a href="https://www.instagram.com/craf_to_ria/" target="_blank" rel="noopener noreferrer"
+                                        className="group relative font-body text-[10px] font-bold tracking-[2px] uppercase text-dark-text/40 hover:text-accent-violet transition-colors duration-300">
+                                        Instagram
+                                        <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent-violet transition-all duration-300 group-hover:w-full" />
+                                    </a>
                                 </div>
                             </div>
                         </div>

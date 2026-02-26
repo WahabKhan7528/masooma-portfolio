@@ -167,7 +167,7 @@ const About = () => {
                     },
                     {
                         title: 'Toolkit',
-                        items: ['Figma & FigJam', 'Framer', 'Adobe Suite', 'React & Tailwind'],
+                        items: ['Figma','Fig-jam','Canva'],
                     },
                 ].map((col, i) => (
                     <div key={col.title} className="bg-dark-bg p-6 sm:p-8 flex flex-col gap-4">

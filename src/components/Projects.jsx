@@ -25,54 +25,41 @@ const projectsData = [
     {
         id: 1,
         index: '01',
-        title: 'Nova App',
-        category: 'Mobile Application Design',
-        year: '2024',
+        title: 'Elan Dance Studio',
+        category: 'Web Design ',
+        year: '2025',
         image: '/project1.png',
         images: ['/project1.png', '/project2.png', '/project1.png'],
-        tags: ['UX', 'Mobile', 'Figma'],
-        desc: 'Nova App is a lifestyle and productivity mobile application focused on minimalist UI, smooth micro-interactions, and an intuitive user flow. The project involved full end-to-end product design from research, wireframing, and usability testing to final high-fidelity prototypes.',
+        tags: ['UI/UX', 'Web', 'Figma', 'Responsive'],
+        desc: 'Elan Dance Studio is a web design project for a dance studio. The design is focused on a minimalist UI, smooth micro-interactions, and an intuitive user flow. The project involved full end-to-end product design from research, wireframing, and usability testing to final high-fidelity prototypes.',
         role: 'UX/UI Designer',
-        duration: '6 weeks',
+        duration: '4 weeks',
     },
     {
         id: 2,
         index: '02',
-        title: 'Lumina Studio',
-        category: 'Brand Identity System',
-        year: '2024',
+        title: 'Apex',
+        category: 'Venture and Investment',
+        year: '2026',
         image: '/project2.png',
         images: ['/project2.png', '/project1.png', '/project2.png'],
-        tags: ['Branding', 'Visual Design'],
-        desc: 'Lumina Studio is a full brand identity system created for a creative photography studio. Includes logo design, typography system, color palette, and brand guidelines — crafted to feel premium, modern, and timeless.',
-        role: 'Brand Designer',
-        duration: '4 weeks',
+        tags: ['Prototype', 'UI/UX', 'Web', 'Responsive'],
+        desc: 'Apex is a web design project for a venture and investment company. The design is focused on a minimalist UI, smooth micro-interactions, and an intuitive user flow. The project involved full end-to-end product design from research, wireframing, and usability testing to final high-fidelity prototypes.',
+        role: 'UI Designer',
+        duration: '5 weeks',
     },
     {
         id: 3,
         index: '03',
-        title: 'Aurora Market',
-        category: 'E-Commerce Platform',
+        title: 'Mentora',
+        category: 'Online Education Platform',
         year: '2023',
         image: '/project1.png',
         images: ['/project1.png', '/project2.png', '/project1.png'],
-        tags: ['UI', 'Web Design', 'Figma'],
+        tags: ['UI/UX', 'Web Design', 'Figma', 'Responsive'],
         desc: 'Aurora Market is a fully designed e-commerce platform for an artisanal goods brand. The design prioritizes an editorial feel, rich product photography, and a seamless checkout experience across all device sizes.',
         role: 'UI Designer',
-        duration: '8 weeks',
-    },
-    {
-        id: 4,
-        index: '04',
-        title: 'Nexus Dashboard',
-        category: 'SaaS Product Design',
-        year: '2023',
-        image: '/project2.png',
-        images: ['/project2.png', '/project1.png', '/project2.png'],
-        tags: ['Dashboard', 'Design System'],
-        desc: 'Nexus is a dense SaaS analytics dashboard built around clarity and performance. Designed a scalable component library in Figma that supports light/dark modes and multiple user roles — enabling the engineering team to ship fast.',
-        role: 'Product Designer',
-        duration: '10 weeks',
+        duration: '5 weeks',
     },
 ];
 
@@ -222,8 +209,6 @@ const ProjectModal = ({ project, onClose }) => {
     );
 };
 
-// Fixed categories for filter tabs based on feedback
-const allTags = ['All', 'UX', 'Figma', 'Web Design', 'Mobile'];
 
 // ─── Main Projects Section ───────────────────────────────────────────────
 const Projects = () => {
@@ -232,8 +217,6 @@ const Projects = () => {
     const [selectedProject, setSelectedProject] = useState(null);
     const [previewSrc, setPreviewSrc] = useState(null);
     const previewRef = useRef(null);
-    const [activeFilter, setActiveFilter] = useState('All');
-    const [filteredProjects, setFilteredProjects] = useState(projectsData);
     const listRef = useRef(null);
 
     useGSAP(() => {
@@ -251,42 +234,6 @@ const Projects = () => {
         });
     }, { scope: container });
 
-    // Handle filter change with GSAP animation
-    const handleFilterChange = (tag) => {
-        if (tag === activeFilter) return;
-        setActiveFilter(tag);
-
-        // Animate existing rows out
-        const rows = listRef.current?.querySelectorAll('.proj-row');
-        if (rows && rows.length > 0) {
-            gsap.to(rows, {
-                y: -20, opacity: 0, stagger: 0.04, duration: 0.3, ease: 'power2.in',
-                onComplete: () => {
-                    // Update filtered data
-                    const newFiltered = tag === 'All'
-                        ? projectsData
-                        : projectsData.filter(p => p.tags.includes(tag));
-                    setFilteredProjects(newFiltered);
-
-                    // Animate new rows in (needs a tick for React to render)
-                    requestAnimationFrame(() => {
-                        const newRows = listRef.current?.querySelectorAll('.proj-row');
-                        if (newRows) {
-                            gsap.fromTo(newRows,
-                                { y: 30, opacity: 0 },
-                                { y: 0, opacity: 1, stagger: 0.08, duration: 0.5, ease: 'power3.out' }
-                            );
-                        }
-                    });
-                }
-            });
-        } else {
-            const newFiltered = tag === 'All'
-                ? projectsData
-                : projectsData.filter(p => p.tags.includes(tag));
-            setFilteredProjects(newFiltered);
-        }
-    };
 
     const handleMouseMove = (e) => {
         if (!previewRef.current) return;
@@ -348,31 +295,16 @@ const Projects = () => {
                     <CharReveal>Projects</CharReveal>
                 </h2>
                 <p className="font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-primary-text/40 font-semibold sm:mb-4">
-                    {filteredProjects.length} Works
+                    {projectsData.length} Works
                 </p>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex flex-wrap items-center gap-2 mb-6 sm:mb-8">
-                {allTags.map((tag) => (
-                    <button
-                        key={tag}
-                        onClick={() => handleFilterChange(tag)}
-                        className={`px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-body text-[10px] sm:text-xs font-bold tracking-[2px] uppercase transition-all duration-300 border ${activeFilter === tag
-                            ? 'bg-accent-violet text-dark-bg border-accent-violet'
-                            : 'bg-transparent text-primary-text/60 border-primary-text/15 hover:border-accent-violet hover:text-accent-violet'
-                            }`}
-                    >
-                        {tag}
-                    </button>
-                ))}
-            </div>
 
             <div className="proj-divider w-full h-[1px] bg-primary-text/15 mb-0" />
 
             {/* Project Rows */}
             <div ref={listRef} className="proj-list flex flex-col">
-                {filteredProjects.map((project) => (
+                {projectsData.map((project) => (
                     <div
                         key={project.id}
                         className="proj-row group relative border-b border-primary-text/10"
@@ -417,12 +349,7 @@ const Projects = () => {
                 ))}
             </div>
 
-            {/* Empty state */}
-            {filteredProjects.length === 0 && (
-                <div className="py-16 text-center">
-                    <p className="font-body text-sm text-primary-text/40 uppercase tracking-[2px]">No projects match this filter</p>
-                </div>
-            )}
+            
 
             {/* Project Detail Modal */}
             {selectedProject && (

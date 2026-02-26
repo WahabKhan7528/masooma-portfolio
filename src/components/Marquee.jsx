@@ -1,5 +1,6 @@
 const Marquee = () => {
-    const text = "✿ graphic designer ✿ ui/ux ✿ figma expert";
+    const text = "✿ Figma Expert ✿ UI Designer ✿ Visual Designer ✿ Design Systems Creator ✿ Wireframe Architect ✿ Prototype Specialist ✿ Brand Designer ✿ Interaction Designer ✿ Creative Strategist";
+
     const repeatedText = Array(4).fill(text).join('');
 
     return (
@@ -11,7 +12,7 @@ const Marquee = () => {
             100% { transform: translateX(-50%); }
           }
           .animate-marquee {
-            animation: marqueeScroll 25s linear infinite;
+            animation: marqueeScroll 70s linear infinite;
           }
         `}
             </style>
