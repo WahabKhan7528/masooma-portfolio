@@ -1,25 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
-
-// Reusable character-split reveal component
-const CharReveal = ({ children, className = '' }) => {
-    const chars = children.split('');
-    return (
-        <span className={className}>
-            {chars.map((char, i) => (
-                <span key={i} className="inline-block overflow-hidden">
-                    <span className="proj-char inline-block" style={{ display: char === ' ' ? 'inline' : 'inline-block' }}>
-                        {char === ' ' ? '\u00A0' : char}
-                    </span>
-                </span>
-            ))}
-        </span>
-    );
-};
+import CharReveal from './shared/CharReveal';
 
 const projectsData = [
     {
@@ -79,7 +62,7 @@ const ProjectModal = ({ project, onClose }) => {
         return () => { document.body.style.overflow = ''; };
     }, []);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         gsap.to(modalRef.current, {
             opacity: 0,
             y: 30,
@@ -87,14 +70,14 @@ const ProjectModal = ({ project, onClose }) => {
             ease: 'power2.in',
             onComplete: onClose,
         });
-    };
+    }, [onClose]);
 
-    // Close on Escape key
+    // Close on Escape key — include handleClose in deps to avoid stale closure
     useEffect(() => {
         const handler = (e) => { if (e.key === 'Escape') handleClose(); };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
-    }, []);
+    }, [handleClose]);
 
     return (
         <div className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center">
@@ -140,6 +123,9 @@ const ProjectModal = ({ project, onClose }) => {
                             <img
                                 src={project.images[activeImg]}
                                 alt={project.title}
+                                loading="lazy"
+                                width={800}
+                                height={600}
                                 className="w-full h-full object-contain transition-opacity duration-300"
                             />
                         </div>
@@ -151,7 +137,7 @@ const ProjectModal = ({ project, onClose }) => {
                                     onClick={() => setActiveImg(i)}
                                     className={`flex-1 aspect-[4/3] rounded-xl overflow-hidden border-2 transition-all duration-300 ${activeImg === i ? 'border-accent-violet' : 'border-transparent opacity-50 hover:opacity-75'}`}
                                 >
-                                    <img src={img} alt="" className="w-full h-full object-contain" />
+                                    <img src={img} alt="" loading="lazy" width={240} height={180} className="w-full h-full object-contain" />
                                 </button>
                             ))}
                         </div>
@@ -284,15 +270,14 @@ const Projects = () => {
             <div
                 ref={previewRef}
                 className="fixed top-0 left-0 w-[240px] aspect-[4/3] h-auto rounded-2xl overflow-hidden pointer-events-none z-[200] opacity-0 scale-90"
-                style={{ willChange: 'transform' }}
             >
                 {previewSrc && <img src={previewSrc} alt="" className="w-full h-full object-contain" />}
             </div>
 
             <div className="proj-title flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
                 <h2 className="font-display text-[clamp(32px,8vw,100px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px] perspective-[1000px]">
-                    <CharReveal className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Selected </CharReveal>
-                    <CharReveal>Projects</CharReveal>
+                    <CharReveal charClass="proj-char" className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Selected </CharReveal>
+                    <CharReveal charClass="proj-char">Projects</CharReveal>
                 </h2>
                 <p className="font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-primary-text/40 font-semibold sm:mb-4">
                     {projectsData.length} Works

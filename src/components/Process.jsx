@@ -1,25 +1,8 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
-
-// Reusable character-split reveal component
-const CharReveal = ({ children, className = '' }) => {
-    const chars = children.split('');
-    return (
-        <span className={className}>
-            {chars.map((char, i) => (
-                <span key={i} className="inline-block overflow-hidden">
-                    <span className="proc-char inline-block" style={{ display: char === ' ' ? 'inline' : 'inline-block' }}>
-                        {char === ' ' ? '\u00A0' : char}
-                    </span>
-                </span>
-            ))}
-        </span>
-    );
-};
+import CharReveal from './shared/CharReveal';
 
 const steps = [
     {
@@ -84,8 +67,14 @@ const Process = () => {
         });
     }, { scope: container });
 
-    // --- 3D Tilt Handlers ---
-    const handleCardMouseMove = (e, i) => {
+    const lastTiltTime = useRef(0);
+
+    // --- 3D Tilt Handlers (throttled to ~30fps) ---
+    const handleCardMouseMove = useCallback((e, i) => {
+        const now = performance.now();
+        if (now - lastTiltTime.current < 33) return;
+        lastTiltTime.current = now;
+
         const card = cardRefs.current[i];
         const glow = glowRefs.current[i];
         if (!card) return;
@@ -109,7 +98,7 @@ const Process = () => {
         if (glow) {
             glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(161,153,255,0.15) 0%, transparent 60%)`;
         }
-    };
+    }, []);
 
     const handleCardMouseLeave = (i) => {
         const card = cardRefs.current[i];
@@ -138,8 +127,8 @@ const Process = () => {
             <div className="mb-12 sm:mb-16 md:mb-24 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                 <div className="overflow-hidden">
                     <h2 className="process-title font-display text-[clamp(36px,9vw,100px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px] perspective-[1000px]">
-                        <CharReveal className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">My </CharReveal>
-                        <CharReveal>Process</CharReveal>
+                        <CharReveal charClass="proc-char" className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">My </CharReveal>
+                        <CharReveal charClass="proc-char">Process</CharReveal>
                     </h2>
                 </div>
                 <p className="process-sub font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-dark-text/40 font-semibold sm:mb-3 max-w-xs">

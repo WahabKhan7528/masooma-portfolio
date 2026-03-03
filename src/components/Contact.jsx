@@ -2,25 +2,7 @@ import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import emailjs from '@emailjs/browser';
-
-gsap.registerPlugin(ScrollTrigger);
-
-// Reusable character-split reveal component
-const CharReveal = ({ children, className = '' }) => {
-    const chars = children.split('');
-    return (
-        <span className={className}>
-            {chars.map((char, i) => (
-                <span key={i} className="inline-block overflow-hidden">
-                    <span className="contact-char inline-block" style={{ display: char === ' ' ? 'inline' : 'inline-block' }}>
-                        {char === ' ' ? '\u00A0' : char}
-                    </span>
-                </span>
-            ))}
-        </span>
-    );
-};
+import CharReveal from './shared/CharReveal';
 
 const Contact = () => {
     const container = useRef(null);
@@ -49,26 +31,26 @@ const Contact = () => {
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        emailjs.sendForm(
-            import.meta.env.EMAILJS_SERVICE_ID,
-            import.meta.env.EMAILJS_TEMPLATE_ID,
-            formRef.current,
-            import.meta.env.EMAILJS_PUBLIC_KEY
-        ).then(
-            () => {
-                setSubmitted(true);
-                setIsSubmitting(false);
-            },
-            (error) => {
-                console.error('FAILED...', error.text);
-                setIsSubmitting(false);
-                alert("Failed to send message. Please check your EmailJS configuration.");
-            }
-        );
+        try {
+            // Dynamic import — only load emailjs when user actually submits
+            const { default: emailjs } = await import('@emailjs/browser');
+            await emailjs.sendForm(
+                import.meta.env.EMAILJS_SERVICE_ID,
+                import.meta.env.EMAILJS_TEMPLATE_ID,
+                formRef.current,
+                import.meta.env.EMAILJS_PUBLIC_KEY
+            );
+            setSubmitted(true);
+        } catch (error) {
+            if (import.meta.env.DEV) console.error('FAILED...', error);
+            alert("Failed to send message. Please check your EmailJS configuration.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -84,8 +66,8 @@ const Contact = () => {
                     {/* Header */}
                     <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
                         <h2 className="font-display text-[clamp(28px,6vw,80px)] uppercase leading-none tracking-[-1px] sm:tracking-[-2px] perspective-[1000px]">
-                            <CharReveal className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Get In </CharReveal>
-                            <CharReveal>Touch</CharReveal>
+                            <CharReveal charClass="contact-char" className="font-serif italic lowercase font-normal text-accent-violet tracking-[1px]">Get In </CharReveal>
+                            <CharReveal charClass="contact-char">Touch</CharReveal>
                         </h2>
                         <p className="font-body text-[10px] sm:text-xs uppercase tracking-[3px] text-dark-text/40 font-semibold sm:mb-2">
                             Let's work together

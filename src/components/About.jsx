@@ -3,8 +3,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger);
-
 const CountUpStat = ({ stat }) => {
     const [count, setCount] = useState(0);
     const containerRef = useRef(null);
@@ -19,26 +17,26 @@ const CountUpStat = ({ stat }) => {
                 if (hasAnimated.current) return;
                 hasAnimated.current = true;
 
-                // Animate using simple JS interval for reliable React state updates
+                // Animate using requestAnimationFrame for smooth, display-synced updates
                 const duration = 2000;
-                const frameRate = 1000 / 60;
-                const totalFrames = Math.round(duration / frameRate);
-                let frame = 0;
+                let startTime = null;
 
-                const counter = setInterval(() => {
-                    frame++;
-                    const progress = frame / totalFrames;
+                const step = (timestamp) => {
+                    if (!startTime) startTime = timestamp;
+                    const elapsed = timestamp - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
                     // Ease out quad
                     const easeProgress = progress * (2 - progress);
-                    const currentCount = Math.round(easeProgress * stat.number);
+                    setCount(Math.round(easeProgress * stat.number));
 
-                    setCount(currentCount);
-
-                    if (frame === totalFrames) {
-                        clearInterval(counter);
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
                         setCount(stat.number);
                     }
-                }, frameRate);
+                };
+
+                requestAnimationFrame(step);
             }
         });
         return () => trigger.kill();
@@ -58,9 +56,6 @@ const CountUpStat = ({ stat }) => {
 
 const About = () => {
     const container = useRef(null);
-    // const stackRef = useRef(null);
-    // const [activeCard, setActiveCard] = useState(0);
-    // const [isHoveringStack, setIsHoveringStack] = useState(false);
 
     useGSAP(() => {
         gsap.from('.about-word', {
@@ -77,33 +72,6 @@ const About = () => {
             }
         });
     }, { scope: container });
-
-    /*
-    useEffect(() => {
-        const stackEl = stackRef.current;
-        if (!stackEl) return;
-
-        const handleWheel = (e) => {
-            if (!isHoveringStack) return;
-            e.preventDefault();
-            if (Math.abs(e.deltaY) < 20) return;
-
-            if (e.deltaY > 0) {
-                setActiveCard(prev => Math.min(prev + 1, 2));
-            } else {
-                setActiveCard(prev => Math.max(prev - 1, 0));
-            }
-        };
-
-        stackEl.addEventListener('wheel', handleWheel, { passive: false });
-        return () => stackEl.removeEventListener('wheel', handleWheel);
-    }, [isHoveringStack]);
-
-    const handleMouseLeave = () => {
-        setIsHoveringStack(false);
-        setActiveCard(0);
-    };
-    */
 
     const TextWrapper = ({ children, className = "" }) => (
         <span className={`inline-block overflow-hidden pb-1 sm:pb-2 ${className}`}>
