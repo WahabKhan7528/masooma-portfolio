@@ -1,11 +1,9 @@
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const Footer = () => {
+const Footer = memo(() => {
     const container = useRef(null);
 
     useGSAP(() => {
@@ -144,6 +142,8 @@ const Footer = () => {
             </div>
         </footer>
     );
-};
+});
+
+Footer.displayName = 'Footer';
 
 export default Footer;

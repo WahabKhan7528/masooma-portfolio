@@ -1,9 +1,7 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
     {
@@ -54,17 +52,17 @@ const Testimonials = () => {
         trackRef.current.style.cursor = 'grabbing';
     };
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = useCallback((e) => {
         if (!isDragging || !trackRef.current) return;
         e.preventDefault();
         const dx = e.pageX - dragStart.current.x;
         trackRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
-    };
+    }, [isDragging]);
 
-    const handleMouseUp = () => {
+    const handleMouseUp = useCallback(() => {
         setIsDragging(false);
         if (trackRef.current) trackRef.current.style.cursor = 'grab';
-    };
+    }, []);
 
     // Touch support
     const handleTouchStart = (e) => {
@@ -84,7 +82,7 @@ const Testimonials = () => {
             document.removeEventListener('mouseup', handleMouseUp);
             document.removeEventListener('mousemove', handleMouseMove);
         };
-    });
+    }, [handleMouseUp, handleMouseMove]);
 
     return (
         <section
@@ -114,7 +112,7 @@ const Testimonials = () => {
                 {testimonials.map((t) => (
                     <div
                         key={t.id}
-                        className="testimonial-card flex-shrink-0 w-[85vw] sm:w-[50vw] lg:w-[calc(33.333%-16px)] p-7 sm:p-9 rounded-[24px] sm:rounded-[28px] bg-primary-text/[0.04] backdrop-blur-xl border border-primary-text/10 flex flex-col justify-between gap-6 sm:gap-8 select-none"
+                        className="testimonial-card flex-shrink-0 w-[85vw] sm:w-[50vw] lg:w-[calc(33.333%-16px)] p-7 sm:p-9 rounded-[24px] sm:rounded-[28px] bg-primary-text/[0.04] border border-primary-text/10 flex flex-col justify-between gap-6 sm:gap-8 select-none"
                     >
                         {/* Quote */}
                         <div>

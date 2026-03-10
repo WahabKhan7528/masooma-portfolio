@@ -1,12 +1,14 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, memo } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
-const Hero = () => {
+const Hero = memo(() => {
     const container = useRef(null);
     const canvasRef = useRef(null);
     const particles = useRef([]);
     const animFrameRef = useRef(null);
+    const isVisible = useRef(true);
+    const lastSpawn = useRef(0);
 
     useGSAP(() => {
         const tl = gsap.timeline();
@@ -18,24 +20,18 @@ const Hero = () => {
             stagger: 0.15,
             ease: 'power4.out',
             delay: 0.2
-        })
-            .from('.hero-subtitle', {
-                opacity: 0,
-                y: 20,
-                duration: 1,
-                ease: 'power2.out'
-            }, "-=0.8");
+        });
 
     }, { scope: container });
 
-    // Particle trail: canvas setup & animation loop
+    // Particle trail: canvas setup & animation loop with visibility detection
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        const section = container.current;
+        if (!canvas || !section) return;
         const ctx = canvas.getContext('2d');
 
         const resize = () => {
-            const section = container.current;
             if (!section) return;
             canvas.width = section.offsetWidth;
             canvas.height = section.offsetHeight;
@@ -43,8 +39,22 @@ const Hero = () => {
         resize();
         window.addEventListener('resize', resize);
 
-        // Animation loop
+        // Pause animation when hero is not visible
+        const observer = new IntersectionObserver(([entry]) => {
+            isVisible.current = entry.isIntersecting;
+            if (entry.isIntersecting && !animFrameRef.current) {
+                animate();
+            }
+        }, { threshold: 0.1 });
+        observer.observe(section);
+
+        // Animation loop — only runs when visible
         const animate = () => {
+            if (!isVisible.current) {
+                animFrameRef.current = null;
+                return;
+            }
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             particles.current = particles.current.filter(p => p.life > 0);
@@ -67,18 +77,23 @@ const Hero = () => {
 
         return () => {
             window.removeEventListener('resize', resize);
+            observer.disconnect();
             if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
         };
     }, []);
 
+    // Throttled particle spawning (~30fps instead of 60+)
     const handleMouseMove = useCallback((e) => {
+        const now = performance.now();
+        if (now - lastSpawn.current < 33) return; // ~30fps
+        lastSpawn.current = now;
+
         const section = container.current;
         if (!section) return;
         const rect = section.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        // Enhance particle trail based on feedback: more, bigger, longer-lasting
         for (let i = 0; i < 6; i++) {
             particles.current.push({
                 x: x + (Math.random() - 0.5) * 15,
@@ -86,7 +101,7 @@ const Hero = () => {
                 radius: Math.random() * 4 + 2,
                 vx: (Math.random() - 0.5) * 1.5,
                 vy: (Math.random() - 0.5) * 1.5,
-                life: 2, // Lasts longer
+                life: 2,
             });
         }
     }, []);
@@ -122,18 +137,6 @@ const Hero = () => {
             </h1>
             {/* Bottom Marquee Band */}
             <div className="absolute bottom-0 left-0 w-full overflow-hidden bg-accent-violet py-3 sm:py-5 flex items-center z-20">
-                <style>
-                    {`
-                    @keyframes heroMarquee {
-                        0% { transform: translateX(0); }
-                        100% { transform: translateX(-50%); }
-                    }
-                    .animate-hero-marquee {
-                        animation: heroMarquee 30s linear infinite;
-                        will-change: transform;
-                    }
-                    `}
-                </style>
                 <div className="flex w-max animate-hero-marquee">
                     {[0, 1].map((group) => (
                         <div key={group} className="flex shrink-0">
@@ -153,6 +156,8 @@ const Hero = () => {
             </div>
         </section>
     );
-};
+});
+
+Hero.displayName = 'Hero';
 
 export default Hero;

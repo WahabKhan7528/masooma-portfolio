@@ -1,15 +1,6 @@
-import { useEffect, useState } from 'react';
-
 const NavOverlay = ({ isOpen, closeMenu }) => {
-    const [renderLinks, setRenderLinks] = useState(false);
-
-    useEffect(() => {
-        if (isOpen) {
-            setTimeout(() => setRenderLinks(true), 200);
-        } else {
-            setRenderLinks(false);
-        }
-    }, [isOpen]);
+    // renderLinks is driven by isOpen — CSS transition-delay handles the stagger timing
+    const renderLinks = isOpen;
 
     const links = [
         { name: 'Home', href: '#home' },

@@ -88,3 +88,22 @@
     scrollbar-width: none;
   }
 }
+
+/* ── Marquee Animations (moved from inline <style> tags) ── */
+@keyframes heroMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-hero-marquee {
+  animation: heroMarquee 30s linear infinite;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marqueeScroll 70s linear infinite;
+}
