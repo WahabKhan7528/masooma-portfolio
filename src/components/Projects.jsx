@@ -53,7 +53,7 @@ const projectsData = [
         index: '03',
         title: 'Mentora',
         category: 'Online Education Platform',
-        year: '2023',
+        year: '2026',
         image: '/mentora/mentora1.webp',
         images: ['/mentora/mentora1.webp', '/mentora/mentora2.webp', '/mentora/mentora3.webp'],
         tags: ['UI/UX', 'Web Design', 'Figma', 'Responsive'],
