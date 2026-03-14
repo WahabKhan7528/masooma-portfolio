@@ -1,19 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import gsap from 'gsap';
+import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
+import gsap from "gsap";
 
 const TransitionWrapper = ({ children }) => {
   const location = useLocation();
+
   const [displayLocation, setDisplayLocation] = useState(location);
-  const [transitionStage, setTransitionStage] = useState('IDLE');
-  
+
   const transitionOverlayRef = useRef(null);
   const svgPathRef = useRef(null);
   const timelineRef = useRef(null);
 
+  // initialize svg dash animation
   useEffect(() => {
     if (svgPathRef.current) {
       const length = svgPathRef.current.getTotalLength();
+
       gsap.set(svgPathRef.current, {
         strokeDasharray: length,
         strokeDashoffset: length,
@@ -22,6 +24,7 @@ const TransitionWrapper = ({ children }) => {
     }
   }, []);
 
+  // trigger transition on route change
   useEffect(() => {
     if (location.pathname !== displayLocation.pathname) {
       handleTransition();
@@ -29,62 +32,76 @@ const TransitionWrapper = ({ children }) => {
   }, [location]);
 
   const handleTransition = () => {
+    // prevent multiple transitions
+    if (timelineRef.current?.isActive()) return;
+
     if (timelineRef.current) timelineRef.current.kill();
-    
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setTransitionStage('IDLE');
-      }
-    });
-    
-    timelineRef.current = tl;
+
     const length = svgPathRef.current.getTotalLength();
 
-    // LEAVE ANIMATION (Curtain closing)
+    const isMobile = window.innerWidth < 768;
+    const targetStrokeWidth = isMobile ? 300 : 700;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        timelineRef.current = null;
+      },
+    });
+
+    timelineRef.current = tl;
+
+    // STAGE 1 — SLOW COVER
     tl.to(transitionOverlayRef.current, {
       opacity: 1,
-      duration: 0.3,
-      ease: "power3.inOut",
+      duration: 0.5,
+      ease: "expo.inOut",
       onStart: () => {
-        transitionOverlayRef.current.style.pointerEvents = 'all';
-      }
+        transitionOverlayRef.current.style.pointerEvents = "all";
+      },
     })
-    .to(svgPathRef.current, {
-      strokeDashoffset: 0,
-      strokeWidth: 600, // Increased for absolute coverage on vertical screens
-      duration: 0.8,
-      ease: "power3.inOut",
-    }, 0)
-    
-    // Switch the content mid-transition
-    .call(() => {
-      setDisplayLocation(location);
-      window.scrollTo(0, 0);
-    }, null, "-=0.2") // Pre-swap slightly early
+      .to(svgPathRef.current, {
+        strokeDashoffset: 0,
+        strokeWidth: targetStrokeWidth,
+        duration: 1.5,
+        ease: "expo.inOut",
+      })
 
-    // ENTER ANIMATION (Curtain opening)
-    .to(svgPathRef.current, {
-      strokeDashoffset: -length,
-      strokeWidth: 2,
-      duration: 0.8,
-      ease: "power3.inOut",
-    }, "-=0.1") // Overlap slightly with leave completion
-    .to(transitionOverlayRef.current, {
-      opacity: 0,
-      duration: 0.3,
-      ease: "power3.inOut",
-      onComplete: () => {
-        transitionOverlayRef.current.style.pointerEvents = 'none';
-        gsap.set(svgPathRef.current, { strokeDashoffset: length });
-      }
-    }, "-=0.4");
+      // STAGE 2 — VERY FAST HOLD
+      .to({}, { duration: 0.1 })
+
+      // SWITCH PAGE CONTENT
+      .call(() => {
+        setDisplayLocation(location);
+        window.scrollTo(0, 0);
+      })
+
+      // STAGE 3 — SLOW REVEAL
+      .to(svgPathRef.current, {
+        strokeDashoffset: -length,
+        strokeWidth: 2,
+        duration: 1.5,
+        ease: "expo.inOut",
+      })
+      .to(transitionOverlayRef.current, {
+        opacity: 0,
+        duration: 0.5,
+        ease: "expo.inOut",
+        onComplete: () => {
+          transitionOverlayRef.current.style.pointerEvents = "none";
+
+          gsap.set(svgPathRef.current, {
+            strokeDashoffset: length,
+          });
+        },
+      });
   };
 
   return (
     <>
-      <div 
-        ref={transitionOverlayRef} 
-        className='fixed inset-0 pointer-events-none z-[9999] flex items-center justify-center opacity-0 bg-black/10 backdrop-blur-sm'
+      {/* Overlay */}
+      <div
+        ref={transitionOverlayRef}
+        className="fixed inset-0 pointer-events-none z-[9999] flex items-center justify-center opacity-0 bg-black/10 backdrop-blur-sm"
       >
         <svg
           width="100%"
@@ -105,6 +122,8 @@ const TransitionWrapper = ({ children }) => {
           />
         </svg>
       </div>
+
+      {/* Page Content */}
       <div className="page-content-wrapper">
         {children(displayLocation)}
       </div>
@@ -113,3 +132,4 @@ const TransitionWrapper = ({ children }) => {
 };
 
 export default TransitionWrapper;
+

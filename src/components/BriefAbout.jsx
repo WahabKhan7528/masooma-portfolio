@@ -36,7 +36,6 @@ const BriefAbout = () => {
             }
         });
 
-        // Parallax image
         gsap.to(imageRef.current, {
             y: -50,
             ease: 'none',
