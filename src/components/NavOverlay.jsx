@@ -1,12 +1,14 @@
+import { Link } from 'react-router-dom';
+
 const NavOverlay = ({ isOpen, closeMenu }) => {
     // renderLinks is driven by isOpen — CSS transition-delay handles the stagger timing
     const renderLinks = isOpen;
 
     const links = [
-        { name: 'Home', href: '#home' },
-        { name: 'About', href: '#about' },
-        { name: 'Work', href: '#projects' },
-        { name: 'Contact', href: '#contact' },
+        { name: 'Home', path: '/' },
+        { name: 'About', path: '/about' },
+        { name: 'Work', path: '/projects' },
+        { name: 'Contact', path: '/contact' },
     ];
 
     return (
@@ -23,20 +25,15 @@ const NavOverlay = ({ isOpen, closeMenu }) => {
             <ul className="flex flex-col items-center gap-2 sm:gap-3">
                 {links.map((link, index) => (
                     <li key={link.name} className="overflow-hidden">
-                        <a
-                            href={link.href}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                closeMenu();
-                                const el = document.getElementById(link.href.replace('#', ''));
-                                if (el) el.scrollIntoView({ behavior: 'smooth' });
-                            }}
+                        <Link
+                            to={link.path}
+                            onClick={closeMenu}
                             className={`block font-display text-4xl sm:text-5xl md:text-7xl lg:text-[90px] uppercase tracking-[2px] text-dark-text transition-all duration-[800ms] ease-out hover:text-accent-violet transform hover:translate-x-5 ${renderLinks ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
                                 }`}
                             style={{ transitionDelay: `${index * 100}ms` }}
                         >
                             {link.name}
-                        </a>
+                        </Link>
                     </li>
                 ))}
             </ul>

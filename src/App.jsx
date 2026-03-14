@@ -1,19 +1,17 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CustomCursor from './components/CustomCursor';
 import Header from './components/Header';
 import NavOverlay from './components/NavOverlay';
-import Hero from './components/Hero';
 import Preloader from './components/Preloader';
 import SmoothScroll from './components/SmoothScroll';
+import TransitionWrapper from './components/shared/TransitionWrapper';
 
-// Lazy-load below-fold sections for smaller initial bundle
-const About = lazy(() => import('./components/About'));
-const Experience = lazy(() => import('./components/Experience'));
-const Process = lazy(() => import('./components/Process'));
-const Projects = lazy(() => import('./components/Projects'));
-const Marquee = lazy(() => import('./components/Marquee'));
-const Testimonials = lazy(() => import('./components/Testimonials'));
-const Contact = lazy(() => import('./components/Contact'));
+// Lazy-load page components
+const Home = lazy(() => import('./pages/Home'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 const Footer = lazy(() => import('./components/Footer'));
 
 function App() {
@@ -33,33 +31,37 @@ function App() {
   }, [isMenuOpen]);
 
   return (
-    <div className="relative w-full min-h-screen">
-      {isLoading && <Preloader onComplete={onPreloaderComplete} />}
+    <Router>
+      <div className="relative w-full min-h-screen">
+        {isLoading && <Preloader onComplete={onPreloaderComplete} />}
 
-      <CustomCursor />
+        <CustomCursor />
 
-      <Header toggleMenu={openMenu} />
-      <NavOverlay isOpen={isMenuOpen} closeMenu={closeMenu} />
+        <Header toggleMenu={openMenu} />
+        <NavOverlay isOpen={isMenuOpen} closeMenu={closeMenu} />
 
-      <SmoothScroll>
-        <main className="relative z-10 w-full flex flex-col items-center">
-          <Hero />
+        <SmoothScroll>
+          <TransitionWrapper>
+            {(location) => (
+              <main className="relative z-10 w-full flex flex-col items-center">
+                <Suspense fallback={null}>
+                  <Routes location={location}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/projects" element={<ProjectsPage />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                  </Routes>
+                </Suspense>
+              </main>
+            )}
+          </TransitionWrapper>
+
           <Suspense fallback={null}>
-            <About />
-            <Experience />
-            <Process />
-            <Projects />
-            <Marquee />
-            <Testimonials />
-            <Contact />
+            <Footer />
           </Suspense>
-        </main>
-
-        <Suspense fallback={null}>
-          <Footer />
-        </Suspense>
-      </SmoothScroll>
-    </div>
+        </SmoothScroll>
+      </div>
+    </Router>
   );
 }
 

@@ -197,13 +197,17 @@ const ProjectModal = ({ project, onClose }) => {
 
 
 // ─── Main Projects Section ───────────────────────────────────────────────
-const Projects = () => {
+import { Link } from 'react-router-dom';
+
+const Projects = ({ limit }) => {
     const container = useRef(null);
     const [hoveredId, setHoveredId] = useState(null);
     const [selectedProject, setSelectedProject] = useState(null);
     const [previewSrc, setPreviewSrc] = useState(null);
     const previewRef = useRef(null);
     const listRef = useRef(null);
+
+    const displayProjects = limit ? projectsData.slice(0, limit) : projectsData;
 
     useGSAP(() => {
         gsap.from('.proj-char', {
@@ -289,7 +293,7 @@ const Projects = () => {
 
             {/* Project Rows */}
             <div ref={listRef} className="proj-list flex flex-col">
-                {projectsData.map((project) => (
+                {displayProjects.map((project) => (
                     <div
                         key={project.id}
                         className="proj-row group relative border-b border-primary-text/10"
@@ -333,6 +337,24 @@ const Projects = () => {
                     </div>
                 ))}
             </div>
+
+            {limit && projectsData.length > limit && (
+                <div className="mt-12 flex justify-center pb-8">
+                    <Link 
+                        to="/projects" 
+                        className="group flex items-center gap-6 px-8 py-4 rounded-full border border-primary-text/10 hover:border-accent-violet transition-all duration-300"
+                    >
+                        <span className="font-body text-xs font-bold tracking-[3px] uppercase text-primary-text/60 group-hover:text-accent-violet transition-colors">
+                            View All Projects
+                        </span>
+                        <div className="w-10 h-10 rounded-full border border-primary-text/15 group-hover:border-accent-violet group-hover:bg-accent-violet group-hover:text-dark-bg flex items-center justify-center transition-all">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </div>
+                    </Link>
+                </div>
+            )}
 
 
 

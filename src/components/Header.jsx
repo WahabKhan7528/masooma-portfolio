@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-const Header = ({ toggleMenu }) => {
-    const [activeSection, setActiveSection] = useState('home');
+import { NavLink, Link } from 'react-router-dom';
 
+const Header = ({ toggleMenu }) => {
     // Dark mode state — defaults to light, checks localStorage
     const [isDark, setIsDark] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -21,37 +21,36 @@ const Header = ({ toggleMenu }) => {
         }
     }, [isDark]);
 
-    const handleNavClick = (e, section) => {
-        e.preventDefault();
-        setActiveSection(section);
-        const element = document.getElementById(section);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' }); // Use smooth since transition is gone
-        }
-    };
+    const navItems = [
+        { name: 'home', path: '/' },
+        { name: 'projects', path: '/projects' },
+        { name: 'about', path: '/about' },
+        { name: 'contact', path: '/contact' }
+    ];
 
     return (
-        <header className="absolute top-0 left-0 w-full flex justify-between items-center px-6 md:px-10 py-6 z-40 bg-transparent pointer-events-none">
+        <header className="absolute top-0 left-0 w-full flex justify-between items-center px-4 sm:px-10 py-6 z-40 bg-transparent pointer-events-none">
             {/* Left Logo */}
-            <div className="font-display text-2xl lowercase tracking-wider pointer-events-auto text-accent-violet">
+            <Link to="/" className="font-display text-2xl lowercase tracking-wider pointer-events-auto text-accent-violet transition-transform active:scale-95">
                 mb.
-            </div>
+            </Link>
 
             {/* Right Pill Navigation + Theme Toggle */}
             <div className="hidden md:flex items-center gap-3 pointer-events-auto">
                 <nav className="flex items-center gap-1 bg-primary-text/5 backdrop-blur-md border border-primary-text/10 shadow-sm rounded-full p-1.5 transition-all">
-                    {['home', 'projects', 'about', 'contact'].map((item) => (
-                        <a
-                            key={item}
-                            href={`#${item}`}
-                            onClick={(e) => handleNavClick(e, item)}
-                            className={`px-6 py-2 rounded-full font-body text-sm font-semibold tracking-wide transition-colors duration-300 capitalize ${activeSection === item
-                                ? 'bg-accent-violet text-dark-bg'
-                                : 'text-primary-text hover:bg-primary-text/10 font-medium'
-                                }`}
+                    {navItems.map((item) => (
+                        <NavLink
+                            key={item.name}
+                            to={item.path}
+                            className={({ isActive }) => 
+                                `px-6 py-2 rounded-full font-body text-sm font-semibold tracking-wide transition-all duration-300 capitalize ${isActive
+                                    ? 'bg-accent-violet text-dark-bg'
+                                    : 'text-primary-text hover:bg-primary-text/10 font-medium'
+                                }`
+                            }
                         >
-                            {item}
-                        </a>
+                            {item.name}
+                        </NavLink>
                     ))}
                 </nav>
 
