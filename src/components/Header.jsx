@@ -23,8 +23,8 @@ const Header = ({ toggleMenu }) => {
 
     const navItems = [
         { name: 'home', path: '/' },
-        { name: 'projects', path: '/projects' },
         { name: 'about', path: '/about' },
+        { name: 'projects', path: '/projects' },
         { name: 'contact', path: '/contact' }
     ];
 

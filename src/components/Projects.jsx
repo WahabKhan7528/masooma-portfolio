@@ -267,7 +267,7 @@ const Projects = ({ limit }) => {
         <section
             ref={container}
             id="projects"
-            className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-24 md:py-32 relative z-20"
+            className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 pt-4 pb-16 sm:pt-8 sm:pb-24 md:pt-12 md:pb-32 relative z-20"
             onMouseLeave={handleSectionLeave}
         >
             {/* Floating cursor preview */}
@@ -340,8 +340,8 @@ const Projects = ({ limit }) => {
 
             {limit && projectsData.length > limit && (
                 <div className="mt-12 flex justify-center pb-8">
-                    <Link 
-                        to="/projects" 
+                    <Link
+                        to="/projects"
                         className="group flex items-center gap-6 px-8 py-4 rounded-full border border-primary-text/10 hover:border-accent-violet transition-all duration-300"
                     >
                         <span className="font-body text-xs font-bold tracking-[3px] uppercase text-primary-text/60 group-hover:text-accent-violet transition-colors">

@@ -7,7 +7,7 @@ const NavOverlay = ({ isOpen, closeMenu }) => {
     const links = [
         { name: 'Home', path: '/' },
         { name: 'About', path: '/about' },
-        { name: 'Work', path: '/projects' },
+        { name: 'Projects', path: '/projects' },
         { name: 'Contact', path: '/contact' },
     ];
 
