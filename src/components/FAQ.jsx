@@ -60,7 +60,7 @@ const FAQ = () => {
     const [openIndex, setOpenIndex] = useState(0);
 
     return (
-        <section className="w-full py-20 sm:py-32 px-8 sm:px-16 md:px-20 lg:px-32 bg-primary-bg flex flex-col lg:flex-row gap-16 lg:gap-32">
+        <section className="w-full py-20 sm:py-32 px-4 sm:px-8 md:px-16 lg:px-32 bg-primary-bg flex flex-col lg:flex-row gap-16 lg:gap-32">
             <div className="lg:w-1/3">
                 <h2 className="font-display text-[clamp(40px,6vw,80px)] uppercase leading-[0.9] tracking-[-2px] text-primary-text">
                     Common <span className="font-serif italic lowercase font-normal text-[#A58BFF] block">Queries</span>

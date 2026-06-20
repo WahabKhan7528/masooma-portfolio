@@ -38,7 +38,7 @@ const ContactHero = () => {
     }, { scope: container });
 
     return (
-        <section ref={container} className="w-full pt-52 pb-40 px-8 sm:px-16 md:px-20 lg:px-32 flex flex-col items-center justify-center text-center bg-primary-bg relative overflow-hidden min-h-[70vh]">
+        <section ref={container} className="w-full pt-52 pb-40 px-4 sm:px-8 md:px-16 lg:px-32 flex flex-col items-center justify-center text-center bg-primary-bg relative overflow-hidden min-h-[70vh]">
             
             {/* Playful background squiggles */}
             <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -53,7 +53,7 @@ const ContactHero = () => {
             <p className="hero-subtitle font-body text-sm sm:text-base uppercase tracking-[5px] text-[#A58BFF] mb-8 font-bold z-10 relative">
                 Let's create something together
             </p>
-            <h1 className="font-display text-[clamp(50px,10vw,160px)] uppercase leading-[1.1] tracking-[-3px] text-primary-text perspective-[1000px] max-w-[95vw] lg:max-w-[1400px] z-10 relative py-8 px-4">
+            <h1 className="font-display text-[clamp(40px,10vw,160px)] uppercase leading-[1.1] tracking-[-3px] text-primary-text perspective-[1000px] max-w-[95vw] lg:max-w-[1400px] z-10 relative py-8 px-4">
                 <CharReveal charClass="hero-char" className="block">Ready to start</CharReveal>
                 <CharReveal charClass="hero-char" className="font-serif italic lowercase font-normal text-[#A58BFF] block">your next project?</CharReveal>
             </h1>

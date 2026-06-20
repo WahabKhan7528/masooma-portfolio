@@ -1,4 +1,5 @@
 import { memo, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -32,6 +33,29 @@ const SquiggleDivider = () => (
 
 const Footer = memo(() => {
     const container = useRef(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleNavigation = (e, path) => {
+        e.preventDefault();
+        if (path.includes('#')) {
+            const [route, hash] = path.split('#');
+            const targetRoute = route || '/';
+            if (location.pathname === targetRoute) {
+                const target = document.getElementById(hash);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                navigate(path);
+                setTimeout(() => {
+                    const target = document.getElementById(hash);
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+            }
+        } else {
+            navigate(path);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
     useGSAP(() => {
         gsap.from('.footer-divider', {
@@ -64,18 +88,8 @@ const Footer = memo(() => {
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
     const HoverButton = ({ text, href }) => {
-        const handleClick = (e) => {
-            if (href.startsWith('#')) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        };
-
         return (
-            <a href={href} onClick={handleClick} className="group relative w-[85vw] sm:w-[24rem] md:w-[26rem] h-16 md:h-[4.5rem] bg-[#EBE6DA] dark:bg-dark-text/10 border border-[#A58BFF] rounded-full flex items-center px-2 md:px-3 overflow-hidden transition-transform hover:scale-[1.02]">
+            <a href={href} onClick={(e) => handleNavigation(e, href)} className="group relative w-[85vw] sm:w-[24rem] md:w-[26rem] h-16 md:h-[4.5rem] bg-[#EBE6DA] dark:bg-dark-text/10 border border-[#A58BFF] rounded-full flex items-center px-2 md:px-3 overflow-hidden transition-transform hover:scale-[1.02]">
                 <div className="absolute left-2 md:left-3 w-12 h-12 md:w-14 md:h-14 bg-[#A58BFF] rounded-full flex items-center justify-center text-white transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:left-[calc(100%-3.5rem)] md:group-hover:left-[calc(100%-4.25rem)] z-10">
                     <svg className="w-5 h-5 md:w-6 md:h-6 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] -rotate-45 group-hover:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" /></svg>
                 </div>
@@ -111,9 +125,14 @@ const Footer = memo(() => {
 
                     {/* Left: Quick Links */}
                     <div className="flex flex-col gap-4 md:gap-6 lg:gap-8 items-start w-full md:w-1/3 order-2 md:order-1 pt-10 md:pt-0">
-                        {['Home', 'Projects', 'About', 'Experience'].map(link => (
-                            <a key={link} href={`#${link.toLowerCase()}-section`} className="group relative inline-block font-display font-normal hover:font-bold text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl text-primary-text uppercase tracking-tighter hover:text-[#A58BFF] transition-all duration-300">
-                                {link}
+                        {[
+                            { name: 'Home', path: '/' },
+                            { name: 'Projects', path: '/projects' },
+                            { name: 'About', path: '/about' },
+                            { name: 'Experience', path: '/about#experience' }
+                        ].map(link => (
+                            <a key={link.name} href={link.path} onClick={(e) => handleNavigation(e, link.path)} className="group relative inline-block font-display font-normal hover:font-bold text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl text-primary-text uppercase tracking-tighter hover:text-[#A58BFF] transition-all duration-300">
+                                {link.name}
                                 <span className="absolute bottom-1 left-0 w-0 h-[2px] bg-[#A58BFF] transition-all duration-500 group-hover:w-full" />
                             </a>
                         ))}
@@ -158,8 +177,8 @@ const Footer = memo(() => {
 
                     {/* Middle: CTA Buttons */}
                     <div className="flex flex-col gap-3 order-1 lg:order-2">
-                        <HoverButton text="Let's Connect" href="#contact-section" />
-                        <HoverButton text="View My Work" href="#projects-section" />
+                        <HoverButton text="Let's Connect" href="/contact#contact" />
+                        <HoverButton text="View My Work" href="/projects" />
                     </div>
 
                     {/* Right: Back to top */}

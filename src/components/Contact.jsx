@@ -71,7 +71,7 @@ const Contact = () => {
         <section
             ref={container}
             id="contact"
-            className="w-full py-20 sm:py-32 px-8 sm:px-16 md:px-20 lg:px-32 bg-primary-bg relative"
+            className="w-full py-20 sm:py-32 px-4 sm:px-8 md:px-16 lg:px-32 bg-primary-bg relative"
         >
             <SquiggleDivider />
             
@@ -91,9 +91,9 @@ const Contact = () => {
                     <div className="contact-elem flex flex-col gap-6 mt-4">
                         <div className="flex flex-col gap-4 bg-primary-text/5 border-[2px] border-[#A58BFF]/20 rounded-[32px] p-8 hover:border-[#A58BFF]/50 transition-colors duration-300">
                             <p className="font-body text-xs font-bold tracking-[3px] uppercase text-[#A58BFF]">Email</p>
-                            <a href="mailto:masooma0225@gmail.com" className="font-body text-xl sm:text-2xl font-bold text-primary-text hover:text-[#A58BFF] transition-colors duration-300 flex items-center gap-3">
+                            <a href="mailto:masooma0225@gmail.com" className="font-body text-lg sm:text-xl md:text-2xl font-bold text-primary-text hover:text-[#A58BFF] transition-colors duration-300 flex flex-wrap items-center gap-2 sm:gap-3 break-all">
                                 masooma0225@gmail.com
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                             </a>
                         </div>
                         <div className="flex flex-col gap-4 bg-primary-text/5 border-[2px] border-[#A58BFF]/20 rounded-[32px] p-8 hover:border-[#A58BFF]/50 transition-colors duration-300">
