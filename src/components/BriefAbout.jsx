@@ -23,6 +23,20 @@ const BriefAbout = () => {
             }
         });
 
+        // Scrub-based text reveal for paragraph
+        gsap.to('.brief-word', {
+            opacity: 1,
+            color: 'var(--color-primary-text)',
+            stagger: 0.1,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.brief-paragraph',
+                start: 'top 85%',
+                end: 'bottom 50%',
+                scrub: 1,
+            }
+        });
+
         // Highlights fade in
         gsap.from('.philosophy-item', {
             opacity: 0,
@@ -88,8 +102,10 @@ const BriefAbout = () => {
                         </h2>
                     </div>
 
-                    <p className="font-body text-base sm:text-lg lg:text-xl text-primary-text/60 leading-relaxed max-w-xl">
-                        I believe that great design isn't just about how things look, but how they feel in the hands of the user. As a UX/UI designer, I craft digital ecosystems where every pixel serves a purpose and every interaction tells a story.
+                    <p className="brief-paragraph font-body text-base sm:text-lg lg:text-xl leading-relaxed max-w-xl flex flex-wrap gap-x-[0.3em] gap-y-[0.1em]">
+                        {"I believe that great design isn't just about how things look, but how they feel in the hands of the user. As a UX/UI designer, I craft digital ecosystems where every pixel serves a purpose and every interaction tells a story.".split(" ").map((word, i) => (
+                            <span key={i} className="brief-word opacity-20 text-primary-text">{word}</span>
+                        ))}
                     </p>
 
                     <div className="philosophy-list flex flex-wrap gap-x-8 sm:gap-x-12 gap-y-4 sm:gap-y-6 pt-4 border-t border-primary-text/10">
