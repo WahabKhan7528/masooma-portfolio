@@ -49,17 +49,6 @@ const BriefAbout = () => {
                 start: 'top 85%',
             }
         });
-
-        gsap.to(imageRef.current, {
-            y: -50,
-            ease: 'none',
-            scrollTrigger: {
-                trigger: container.current,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1,
-            }
-        });
     }, { scope: container });
 
     return (
@@ -71,13 +60,13 @@ const BriefAbout = () => {
                 
                 {/* Visual Part - Left (Artistic Anchor) */}
                 <div className="w-full lg:w-5/12 order-2 lg:order-1">
-                    <div className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[3/4] rounded-[32px] sm:rounded-[40px] overflow-hidden group">
-                        <div className="absolute inset-0 bg-accent-violet/10 group-hover:bg-accent-violet/0 transition-colors duration-700 z-10" />
+                    <div className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[3/4] rounded-[32px] sm:rounded-[40px] overflow-hidden group bg-transparent">
+                        <div className="absolute inset-0 bg-accent-violet/10 group-hover:bg-accent-violet/0 transition-colors duration-700 z-10 pointer-events-none" />
                         <img 
                             ref={imageRef}
-                            src="/brief-about-art.png" 
+                            src="/momo img.jpeg" 
                             alt="UX Design Philosophy Abstract" 
-                            className="w-full h-full object-cover scale-110 group-hover:scale-105 transition-transform duration-[2s] ease-out"
+                            className="w-full h-full object-contain object-center transition-transform duration-[2s] ease-out group-hover:scale-95"
                         />
                         {/* Glassmorphism Badge */}
                         <div className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 p-4 sm:p-6 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl z-20 hidden xs:block max-w-[160px] sm:max-w-[200px]">
